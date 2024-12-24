@@ -1,0 +1,9 @@
+2ouS5JndERvptBEX9ZVmtg4i20Y_79Rvz3qjXqp43eDhgB2g7
+
+ngrok config add-authtoken 2ouS5JndERvptBEX9ZVmtg4i20Y_79Rvz3qjXqp43eDhgB2g7
+
+ngrok http 5050
+
+uvicorn main:app --port 5050
+
+@starlink_g91k_bot
