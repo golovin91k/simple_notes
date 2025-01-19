@@ -34,5 +34,5 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-print(settings.get_webhook_url)
+# print(BASE_DIR)
+# print(settings.get_webhook_url)

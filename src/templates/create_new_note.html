@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('statics', path='css/style.css') }}">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  </head>
+  <body>
+    <form class="note-form" id="noteForm" action="/successful_note_creation" method="POST">
+      <div class="form-group">
+        <label for="category">Категория:</label>
+        <select id="category" name="category">
+          <option value="" disabled selected>Выберите категорию</option>
+          {% for cat in user_categories %}
+          <option value="{{cat}}"> {{cat}} </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="note-title">Название заметки:</label>
+        <textarea name="note_title" minlength="1" maxlength="20" rows="1" required placeholder="Введите название заметки..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="note-text">Текст заметки:</label>
+        <textarea name="note_text" minlength="1" maxlength="500" rows="10" required placeholder="Введите текст заметки..."></textarea>
+      </div>
+      {% if user_pinned_notes < 7 %}
+      <div class="checkbox-group">
+        <input type="checkbox" id="pin-note" name="note_pin" default:"False">
+        <label for="pin-note">Закрепить заметку</label>
+      </div>
+      {% endif %}
+      <input type="hidden" id="user_telegram_id" name="user_id" value={{user_id}} />
+      <button type="submit">Создать заметку</button>
+    </form>
+    <script>
+      let tg = window.Telegram.WebApp;
+
+// Получаем и декодируем initData
+let initData = tg.initData || '';
+let initDataUnsafe = tg.initDataUnsafe || {};
+
+// Проверяем авторизацию пользователя
+if (initDataUnsafe.user) {
+    console.log("User is authorized:", initDataUnsafe.user.first_name);
+} else {
+    console.log("User is not authorized");
+}
+
+// Отправляем данные обратно боту
+document.getElementById('sendData').addEventListener('click', function() {
+    tg.sendData("Some data from Mini App");
+});
+</script>
+  </body>
+</html>

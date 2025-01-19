@@ -1,7 +1,7 @@
+from datetime import datetime
 from typing import List
 
 from sqlalchemy import func
-from datetime import datetime
 
 from sqlalchemy import Boolean, ForeignKey, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -18,9 +18,13 @@ class Base(DeclarativeBase):
 
 class User(Base):
     __tablename__ = 'users'
-    telegram_id: Mapped[int]
-    notes: Mapped[List['Note']] = relationship(back_populates='user')
-    category: Mapped[List['Category']] = relationship(back_populates='user')
+    telegram_id: Mapped[int] = mapped_column(unique=True, nullable=False)
+    token: Mapped[str] = mapped_column(unique=True, nullable=False)
+    is_admin: Mapped[bool] = mapped_column(Boolean(), default=False)
+    notes: Mapped[List['Note']] = relationship(
+        'Note', back_populates='user', cascade='all, delete')
+    categories: Mapped[List['Category']] = relationship(
+        'Category', back_populates='user', cascade='all, delete')
 
 
 class Category(Base):
@@ -28,8 +32,9 @@ class Category(Base):
     title: Mapped[str] = mapped_column(String(20))
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 
-    user: Mapped['User'] = relationship(back_populates='category')
-    notes: Mapped[List['Note']] = relationship(back_populates='category')
+    user: Mapped['User'] = relationship('User', back_populates='categories')
+    notes: Mapped[List['Note']] = relationship(
+        'Note', back_populates='category')
 
 
 class Note(Base):
@@ -38,8 +43,11 @@ class Note(Base):
     text: Mapped[str] = mapped_column(Text())
     is_pinned: Mapped[bool] = mapped_column(Boolean(), default=False)
 
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey('users.id'), nullable=False)
     category_id: Mapped[int] = mapped_column(ForeignKey('categories.id'))
 
-    category: Mapped['Category'] = relationship(back_populates='note')
-    user: Mapped['User'] = relationship(back_populates='note')
+    category: Mapped['Category'] = relationship(
+        'Category', back_populates='notes')
+    user: Mapped['User'] = relationship(
+        'User', back_populates='notes')

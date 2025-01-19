@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram WebApp - Get Telegram ID</title>
+    <script async src="https://web.telegram.org/js/telegram-webapp.js"></script>
+</head>
+<body>
+    <h1>Telegram WebApp</h1>
+    <p>Нажмите кнопку, чтобы получить ваш Telegram ID.</p>
+    <button id="getIdButton">Получить Telegram ID</button>
+    <p id="telegramId"></p>
+
+    <script>
+        // Проверяем, доступен ли Telegram WebApp API
+        if (window.Telegram.WebApp) {
+            // Инициализируем WebApp
+            Telegram.WebApp.ready();
+
+            // Обработчик кнопки
+            document.getElementById("getIdButton").addEventListener("click", function() {
+                // Получаем Telegram ID пользователя из WebApp
+                const userId = Telegram.WebApp.initDataUnsafe.user.id;
+                // Отображаем ID на странице
+                document.getElementById("telegramId").textContent = "Ваш Telegram ID: " + userId;
+            });
+        } else {
+            alert("WebApp не доступен! Пожалуйста, откройте приложение через Telegram.");
+        }
+    </script>
+</body>
+</html>
