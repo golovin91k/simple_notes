@@ -1,10 +1,9 @@
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import func
-
-from sqlalchemy import Boolean, ForeignKey, String, Text
+from sqlalchemy import Boolean, ForeignKey, func, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy_utils import URLType
 
 
 class Base(DeclarativeBase):
@@ -40,8 +39,9 @@ class Category(Base):
 class Note(Base):
     __tablename__ = 'notes'
     title: Mapped[str] = mapped_column(String(20))
-    text: Mapped[str] = mapped_column(Text())
+    text: Mapped[str] = mapped_column(Text(500))
     is_pinned: Mapped[bool] = mapped_column(Boolean(), default=False)
+    link_to_forwd_msg: Mapped[str] = mapped_column(URLType, nullable=True)
 
     user_id: Mapped[int] = mapped_column(
         ForeignKey('users.id'), nullable=False)
