@@ -3,7 +3,7 @@ from typing import List
 
 from sqlalchemy import Boolean, ForeignKey, func, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy_utils import URLType
+# from sqlalchemy_utils import URLType
 
 
 class Base(DeclarativeBase):
@@ -39,9 +39,9 @@ class Category(Base):
 class Note(Base):
     __tablename__ = 'notes'
     title: Mapped[str] = mapped_column(String(20))
-    text: Mapped[str] = mapped_column(Text(500))
+    text: Mapped[str] = mapped_column(Text())
     is_pinned: Mapped[bool] = mapped_column(Boolean(), default=False)
-    link_to_forwd_msg: Mapped[str] = mapped_column(URLType, nullable=True)
+    link_to_forwd_msg: Mapped[str] = mapped_column(String(100), nullable=True)
 
     user_id: Mapped[int] = mapped_column(
         ForeignKey('users.id'), nullable=False)

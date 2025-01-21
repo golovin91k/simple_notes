@@ -1,5 +1,6 @@
-from aiogram.types import ReplyKeyboardMarkup, WebAppInfo, InlineKeyboardMarkup
-from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
+from aiogram.types import (ReplyKeyboardMarkup, WebAppInfo,
+                           InlineKeyboardButton, InlineKeyboardMarkup)
+from aiogram.utils.keyboard import ReplyKeyboardBuilder  # InlineKeyboardBuilder
 
 from src.app.core.config import settings
 
@@ -21,6 +22,23 @@ def main_user_keyboard(user_id, user_token) -> ReplyKeyboardMarkup:
     #         url=url_app_show_notes))
     kb.adjust(1)
     return kb.as_markup(resize_keyboard=True)
+
+
+def user_inline_keyboard_for_frwd_msg(
+        user_id, user_token, tg_canal_name,
+        forw_msg_id, current_msg_id, is_tg_canal_name) -> InlineKeyboardMarkup:
+    url_app_note_creation_with_fwd_masg = (
+        f'{settings.SITE_URL}/create_new_note_from_frwd_msg/'
+        f'{user_id}_{user_token}/{forw_msg_id}/{tg_canal_name}/'
+        f'{is_tg_canal_name}')
+    user_inline_kbrd = [
+        [InlineKeyboardButton(
+            text='Создать заметку из переслан. сообщения', web_app=WebAppInfo(
+                url=url_app_note_creation_with_fwd_masg))],
+        [InlineKeyboardButton(
+            text='Не создавать заметку',
+            callback_data=f'delete_msg_{current_msg_id}')]]
+    return InlineKeyboardMarkup(inline_keyboard=user_inline_kbrd)
 
 
 # def back_keyboard() -> ReplyKeyboardMarkup:

@@ -21,7 +21,12 @@
         <label for="note-title">Название заметки:</label>
         <textarea name="note_title" minlength="1" maxlength="20" rows="1" required placeholder="Введите название заметки..."></textarea>
       </div>
-
+      {% if tg_url%}
+      <div class="form-group">
+        <label for="note-title">Ссылка на пересланное сообщение:</label>
+        <p> {{tg_url}} </p>
+      </div>
+      {% endif %}
       <div class="form-group">
         <label for="note-text">Текст заметки:</label>
         <textarea name="note_text" minlength="1" maxlength="500" rows="10" required placeholder="Введите текст заметки..."></textarea>

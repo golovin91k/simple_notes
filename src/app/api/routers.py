@@ -1,5 +1,3 @@
-# import secrets
-
 from fastapi import APIRouter, Form
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
@@ -42,12 +40,6 @@ async def successful_note_creation(
         note_text: str = Form(min_length=1, max_length=500),
         note_pin: bool = Form(default=False),
         user_id: int = Form()):
-    # print(category_title)
-    # print(note_title)
-    # print(note_title)
-    # print(note_text)
-    # print(note_pin)
-    # print(user_id)
     category_id = await get_category_id_by_title(user_id, category_title)
     note_service = NoteService()
     await note_service.create_new_note(
@@ -61,3 +53,31 @@ async def successful_note_creation(
     '/notes/{user_id}_{user_token}')  # response_class=HTMLResponse)
 async def show_notes(request: Request, user_id: int, user_token: str):
     return await get_user_notes(user_id)
+
+
+@user_router_api.get(
+    ('/create_new_note_from_frwd_msg/'
+     '{user_id}_{user_token}/{forw_msg_id}/{tg_canal_name}/'
+     '{is_tg_canal_name}'),
+    response_class=HTMLResponse)
+async def create_new_note_from_frwd_msg(
+        request: Request, user_id: int, user_token: str,
+        forw_msg_id: int, tg_canal_name: str, is_tg_canal_name: bool):
+    if not await check_user_id_and_user_token(user_id, user_token):
+        return '404 error'
+    user_categories = await get_user_categories(user_id)
+    user_pinned_notes = await get_number_user_pin_notes(user_id)
+    if is_tg_canal_name:
+        tg_url = ('https://t.me/' + f'{tg_canal_name}/{forw_msg_id}')
+    else:
+        tg_canal_name = tg_canal_name[4:]
+        tg_url = ('https://t.me/c/' + f'{tg_canal_name}/{forw_msg_id}')
+    context = {
+        'user_id': user_id,
+        'user_categories': user_categories,
+        'user_pinned_notes': user_pinned_notes,
+        'tg_url': tg_url
+    }
+    return templates.TemplateResponse(
+        name='create_new_note.html',
+        request=request, context=context)
