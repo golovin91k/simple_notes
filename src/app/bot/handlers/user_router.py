@@ -36,7 +36,10 @@ async def handle_button_press(message: types.Message):
     user_id = await get_user_id_and_token_by_telegram_id(message.from_user.id)
     user_pin_notes = await get_user_pin_notes(user_id[0])
     for obj in user_pin_notes:
-        await bot.send_message(message.from_user.id, obj.text)
+        try:
+            await bot.send_message(message.from_user.id, obj.link_to_forwd_msg)
+        except Exception:
+            pass
     await message.delete()
 
 

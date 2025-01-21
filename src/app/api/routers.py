@@ -24,8 +24,7 @@ async def create_new_note(request: Request, user_id: int, user_token: str):
     context = {
         'user_id': user_id,
         'user_categories': user_categories,
-        'user_pinned_notes': user_pinned_notes
-    }
+        'user_pinned_notes': user_pinned_notes}
     return templates.TemplateResponse(
         name='create_new_note.html',
         request=request, context=context)
@@ -39,11 +38,12 @@ async def successful_note_creation(
         note_title: str = Form(min_length=1, max_length=20),
         note_text: str = Form(min_length=1, max_length=500),
         note_pin: bool = Form(default=False),
-        user_id: int = Form()):
+        user_id: int = Form(),
+        tg_url: str = Form(default=None)):
     category_id = await get_category_id_by_title(user_id, category_title)
     note_service = NoteService()
     await note_service.create_new_note(
-        note_title, note_text, note_pin, user_id, category_id)
+        note_title, note_text, note_pin, user_id, category_id, tg_url)
     return templates.TemplateResponse(
         name='successful_note_creation.html',
         request=request)
@@ -76,8 +76,7 @@ async def create_new_note_from_frwd_msg(
         'user_id': user_id,
         'user_categories': user_categories,
         'user_pinned_notes': user_pinned_notes,
-        'tg_url': tg_url
-    }
+        'tg_url': tg_url}
     return templates.TemplateResponse(
         name='create_new_note.html',
         request=request, context=context)
