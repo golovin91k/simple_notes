@@ -7,16 +7,33 @@ from models.models import User, Note, Category
 from services.user_service import UserService
 from bot.create_bot import bot
 
+async def db_decorator(func):
+    async def wrapper(*args, **kwargs):
+        async with AsyncSession(engine) as session:
+            x = func(*args, **kwargs)
+        await engine.dispose()
+        return x
+    return wrapper              
 
+@db_decorator
 async def check_user_telegram_id_in_db(telegram_id):
-    async with AsyncSession(engine) as session:
-        db_obj = await session.execute(select(User).where(
-            User.telegram_id == telegram_id))
-        db_obj = db_obj.scalars().first()
-    await engine.dispose()
+    db_obj = await session.execute(select(User).where(
+        User.telegram_id == telegram_id))
+    db_obj = db_obj.scalars().first()
     if db_obj:
         return True
     return False
+
+
+# async def check_user_telegram_id_in_db(telegram_id):
+#     async with AsyncSession(engine) as session:
+#         db_obj = await session.execute(select(User).where(
+#             User.telegram_id == telegram_id))
+#         db_obj = db_obj.scalars().first()
+#     await engine.dispose()
+#     if db_obj:
+#         return True
+#     return False
 
 
 async def get_user_id_and_token_by_telegram_id(telegram_id):
