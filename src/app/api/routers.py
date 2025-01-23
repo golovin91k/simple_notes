@@ -80,3 +80,19 @@ async def create_new_note_from_frwd_msg(
     return templates.TemplateResponse(
         name='create_new_note.html',
         request=request, context=context)
+
+
+@user_router_api.get(
+    '/{user_id}_{user_token}/categories',
+    response_class=HTMLResponse)
+async def show_user_categories(
+        request: Request, user_id: int, user_token: str):
+    if not await check_user_id_and_user_token(user_id, user_token):
+        return '404 error'
+    user_categories = await get_user_categories(user_id)
+    context = {
+        'user_categories': user_categories
+    }
+    return templates.TemplateResponse(
+        name='show_user_categories.html',
+        request=request, context=context)

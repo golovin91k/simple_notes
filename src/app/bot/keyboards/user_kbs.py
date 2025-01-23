@@ -12,14 +12,16 @@ def main_user_keyboard(user_id, user_token) -> ReplyKeyboardMarkup:
     kb.button(
         text='Создать новую заметку', web_app=WebAppInfo(
             url=url_app_note_creation))
-    # url_app_show_notes = (
-    #     f'{settings.SITE_URL}/notes/{user_id}_{user_token}')
-    kb.button(
-        text='Просмотреть все заметки', callback_data='button_pressed')
-    kb.button(text='Показать закрепленные заметки')
+    url_app_show_notes = (
+        f'{settings.SITE_URL}/{user_id}_{user_token}/categories')
+    print(url_app_show_notes)
+    print(url_app_note_creation)
     # kb.button(
-    #     text='Просмотреть свои заметки', web_app=WebAppInfo(
-    #         url=url_app_show_notes))
+    #     text='Просмотреть все заметки', callback_data='button_pressed')
+    kb.button(text='Показать закрепленные заметки')
+    kb.button(
+        text='Просмотреть свои заметки', web_app=WebAppInfo(
+            url=url_app_show_notes))
     kb.adjust(1)
     return kb.as_markup(resize_keyboard=True)
 

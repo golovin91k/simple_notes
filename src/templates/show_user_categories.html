@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('statics', path='css/style.css') }}">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  </head>
+  <body style="background-color: rgb(212,226,234)">
+    <div class="blue-div"></div>
+    <div class="container">
+      <div class="blue-div"></div>
+
+
+      
+    {% for cat in user_categories %}
+    <div class="category-block">
+      <h2> {{cat}} </h2>
+      <button class="view-button">Просмотреть заметки</button>
+    </div>
+    {% endfor %}
+  </div>
+  <script>
+      let tg = window.Telegram.WebApp;
+
+// Получаем и декодируем initData
+let initData = tg.initData || '';
+let initDataUnsafe = tg.initDataUnsafe || {};
+
+// Проверяем авторизацию пользователя
+if (initDataUnsafe.user) {
+    console.log("User is authorized:", initDataUnsafe.user.first_name);
+} else {
+    console.log("User is not authorized");
+}
+
+// Отправляем данные обратно боту
+document.getElementById('sendData').addEventListener('click', function() {
+    tg.sendData("Some data from Mini App");
+});
+</script>
+  </body>
+</html>

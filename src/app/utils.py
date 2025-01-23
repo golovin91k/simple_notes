@@ -1,39 +1,23 @@
+
+
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.config import settings
-from core.connection_to_db import engine
+from core.connection_to_db import create_async_session, engine
 from models.models import User, Note, Category
 from services.user_service import UserService
 from bot.create_bot import bot
 
-async def db_decorator(func):
-    async def wrapper(*args, **kwargs):
-        async with AsyncSession(engine) as session:
-            x = func(*args, **kwargs)
-        await engine.dispose()
-        return x
-    return wrapper              
 
-@db_decorator
-async def check_user_telegram_id_in_db(telegram_id):
+@create_async_session
+async def check_user_telegram_id_in_db(telegram_id, session=None):
     db_obj = await session.execute(select(User).where(
-        User.telegram_id == telegram_id))
+            User.telegram_id == telegram_id))
     db_obj = db_obj.scalars().first()
     if db_obj:
         return True
     return False
-
-
-# async def check_user_telegram_id_in_db(telegram_id):
-#     async with AsyncSession(engine) as session:
-#         db_obj = await session.execute(select(User).where(
-#             User.telegram_id == telegram_id))
-#         db_obj = db_obj.scalars().first()
-#     await engine.dispose()
-#     if db_obj:
-#         return True
-#     return False
 
 
 async def get_user_id_and_token_by_telegram_id(telegram_id):
@@ -47,12 +31,11 @@ async def get_user_id_and_token_by_telegram_id(telegram_id):
     return None
 
 
-async def check_user_id_and_user_token(user_id, user_token):
-    async with AsyncSession(engine) as session:
-        db_obj = await session.execute(select(User).where(
-            User.id == user_id))
-        db_obj = db_obj.scalars().first()
-    await engine.dispose()
+@create_async_session
+async def check_user_id_and_user_token(user_id, user_token, session=None):
+    db_obj = await session.execute(select(User).where(
+        User.id == user_id))
+    db_obj = db_obj.scalars().first()
     if db_obj and db_obj.token == user_token:
         return True
     return False

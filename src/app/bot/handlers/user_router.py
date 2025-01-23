@@ -73,7 +73,7 @@ async def handle_forwarded_message(message: types.Message):
                 user_id, user_token, tg_canal_name, forw_msg_id,
                 current_msg_id, is_tg_canal_name))
     else:
-        await message.edit("Это не пересланное сообщение.")
+        await message.reply("Это не пересланное сообщение.")
 
 
 @user_router.callback_query(F.data.startswith('delete_msg'))
