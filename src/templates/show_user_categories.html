@@ -2,41 +2,170 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('statics', path='css/style.css') }}">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+      body {
+        background-color: #E0E1DD;
+    }
+    
+    .main-container {
+        max-width: 500px;
+        background: white;
+        margin: 10px auto;
+        padding-bottom: 2px;
+        border-radius: 12px;
+    }
+    
+    .header-div {
+        max-width: 500px;
+        /*height: 20px;*/
+        margin: 10px auto;
+        padding: 5px 0px;
+        background-color: #1B263B;
+        text-align: center;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+    
+    .category-div {
+        max-width: 500px;
+        background: white;
+        margin: 10px 10px;
+        /*padding: 10px;*/
+        border-radius: 12px;
+        border: solid 2px;
+    }
+    
+    .category-header-div {
+        max-width: 500px;
+        /*height: 30px;*/
+        margin: 0px auto;
+        padding: 5px 0px;
+        background-color: #415A77;
+        text-align: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+    
+    .div-flex {
+        display: flex;
+    }
+    
+    .p-default {
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 12pt;
+        color: black;
+        margin: 0px;
+    }
+    
+    .p-category {
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 12pt;
+        font-weight: bold;
+        color: #243444;
+        margin: 0px;  
+    }
+    
+    .category-div-for-p {
+        display: flex;
+        padding-left: 5px;
+        padding-right: 5px
+    }
+    
+    .category-block {
+        background: #fff;
+        margin: 10px auto 20px auto;
+        padding: 0px;
+        border-radius: 12px;
+        border: solid;
+        /*border-color: rgb(99,160,232);*/
+        border-color: grey;
+        max-width: 450px;
+    }
+    
+    
+    .category-button {
+        background: #043464;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        height: 25px;
+    }
+    
+    a {
+        /*display: block;*/
+        width: 100%;
+        text-decoration: none;
+        /*height: auto;*/
+        background: #f5f5f5;
+        /*border: 2px solid black;*/
+        /* Граница визуально подчеркивает, что кликабельная зона охватывает весь блок */
+    }
+  </style>    
   </head>
-  <body style="background-color: rgb(212,226,234)">
-    <div class="blue-div"></div>
-    <div class="container">
-      <div class="blue-div"></div>
-
-
+  <body>
+    <div class="main-container">
+      <div class="header-div">
+        <p class="p-category" style="color: white;">Выберите категорию заметок</p>    
+      </div>
       
-    {% for cat in user_categories %}
-    <div class="category-block">
-      <h2> {{cat}} </h2>
-      <button class="view-button">Просмотреть заметки</button>
+      {% for category in categories %}
+      <a href="{{ url_for('show_category_notes', user_id=user_id, user_token=user_token, category_id=category.id, all_pages=category.number_of_note_pages, current_page=1) }}">
+      <div class="category-div">
+          <div class="category-header-div" style="background: {{category.color}}">
+               <p class="p-category" style="color: white;">{{category.title}}</p> 
+          </div>
+        <div class="div-flex">
+         <p class="p-default" style="padding-left: 10px"> Название последней заметки:</p>
+         <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{category.latest_note.title}} </p>
+        </div>
+        <div class="div-flex" style="max-width: 450px;">
+         <p class="p-default" style="padding-left: 10px"> Текст: </p>
+         <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{category.latest_note.text}}  </p>
+        </div>
+        <div class="div-flex">
+         <p class="p-default" style="padding-left: 10px"> Дата:</p>
+         <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{category.latest_note.updated_at}} </p>
+        </div>  
+      </div>
+      </a>
+      {% endfor %}
+
     </div>
-    {% endfor %}
-  </div>
-  <script>
-      let tg = window.Telegram.WebApp;
 
-// Получаем и декодируем initData
-let initData = tg.initData || '';
-let initDataUnsafe = tg.initDataUnsafe || {};
-
-// Проверяем авторизацию пользователя
-if (initDataUnsafe.user) {
-    console.log("User is authorized:", initDataUnsafe.user.first_name);
-} else {
-    console.log("User is not authorized");
-}
-
-// Отправляем данные обратно боту
-document.getElementById('sendData').addEventListener('click', function() {
-    tg.sendData("Some data from Mini App");
-});
-</script>
+    <!--<div class="container">-->
+    <!--  <div class="blue-div">-->
+    <!--  <p class="p-category" style="text-align: center; color: white"> Выберите категорию заметок: </p>-->
+    <!--  </div>-->
+    <!--  <a href="product-page.html" class="product-card">-->
+    <!--  <div class="category-block">-->
+    <!--    <div class="category-div-for-p">-->
+    <!--      <p class="p-category"> Категория: </p>-->
+    <!--      <p class="p-category" style="color: red;"> ((Без категории)) </p>-->
+    <!--    </div>-->
+    <!--    <div class="category-div-for-p" style="margin-top: 10px;">-->
+    <!--      <p class="p-category"> Последняя созданная или измененная заметка: </p>-->
+    <!--    </div>  -->
+    <!--    <div class="category-div-for-p" style="justify-content: space-between">-->
+    <!--      <div class="category-div-for-p" style="padding-left: 0px">-->
+    <!--        <p class="p-category"> Название: </p>-->
+    <!--        <p class="p-category" style="color: red;"> ((Название)) </p>-->
+    <!--      </div>-->
+    <!--      <div class="category-div-for-p">-->
+    <!--        <p class="p-category"> Дата: </p>-->
+    <!--        <p class="p-category" style="color: red;"> ((Дата))</p>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--    <div class="category-div-for-p">-->
+    <!--      <p class="p-category"> Текст: </p>-->
+    <!--      <p class="p-category" style="color: red;"> ((Текст)) </p>-->
+    <!--    </div>-->
+        <!--<button class="category-button" style="border-top-left-radius: 0px; border-top-right-radius: 0px">Просмотреть заметки</button>-->
+    <!--  </div>-->
+    <!--  </a>-->
+    <!--</div>-->
   </body>
 </html>

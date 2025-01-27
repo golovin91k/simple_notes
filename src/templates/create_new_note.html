@@ -9,10 +9,10 @@
     <form class="note-form" id="noteForm" action="/successful_note_creation" method="POST">
       <div class="form-group">
         <label for="category">Категория:</label>
-        <select id="category" name="category">
+        <select id="category" name="category_title">
           <option value="" disabled selected>Выберите категорию</option>
           {% for cat in user_categories %}
-          <option value="{{cat}}"> {{cat}} </option>
+          <option name="category_title" value="{{cat}}"> {{cat}} </option>
           {% endfor %}
         </select>
       </div>

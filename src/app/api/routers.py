@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from core.config import BASE_DIR
 from src.app.utils import (
     check_user_id_and_user_token, get_user_notes, get_user_categories,
-    get_category_id_by_title, get_number_user_pin_notes)
+    get_category_id_by_title, get_number_user_pin_notes, get_user_categories_and_notes)
 from src.app.services.note_service import NoteService
 
 
@@ -41,6 +41,8 @@ async def successful_note_creation(
         user_id: int = Form(),
         tg_url: str = Form(default=None)):
     category_id = await get_category_id_by_title(user_id, category_title)
+    print(category_title)
+    print(category_id)
     note_service = NoteService()
     await note_service.create_new_note(
         note_title, note_text, note_pin, user_id, category_id, tg_url)
@@ -49,10 +51,10 @@ async def successful_note_creation(
         request=request)
 
 
-@user_router_api.get(
-    '/notes/{user_id}_{user_token}')  # response_class=HTMLResponse)
-async def show_notes(request: Request, user_id: int, user_token: str):
-    return await get_user_notes(user_id)
+# @user_router_api.get(
+#     '/notes/{user_id}_{user_token}')  # response_class=HTMLResponse)
+# async def show_notes(request: Request, user_id: int, user_token: str):
+#     return await get_user_notes(user_id)
 
 
 @user_router_api.get(
@@ -89,10 +91,31 @@ async def show_user_categories(
         request: Request, user_id: int, user_token: str):
     if not await check_user_id_and_user_token(user_id, user_token):
         return '404 error'
-    user_categories = await get_user_categories(user_id)
+    # user_categories = await get_user_categories(user_id)
+    categories = await get_user_categories_and_notes(user_id)
+    for category in categories:
+        setattr(category, 'color', 'black')
     context = {
-        'user_categories': user_categories
-    }
+        'categories': categories,
+        'user_id': user_id,
+        'user_token': user_token}
     return templates.TemplateResponse(
         name='show_user_categories.html',
         request=request, context=context)
+
+
+@user_router_api.get(
+    '/{user_id}_{user_token}/category_id/{category_id}'
+    '/notes/{all_pages}_{current_page}')
+async def show_category_notes(
+        request: Request,
+        user_id: int,
+        user_token: str,
+        category_id: int,
+        all_pages: int,
+        current_page: int):
+    print(category_id)
+    print(user_id)
+    print(user_token)
+    print(all_pages)
+    print(current_page)

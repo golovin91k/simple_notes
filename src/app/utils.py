@@ -1,6 +1,7 @@
 
 
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.config import settings
@@ -13,7 +14,7 @@ from bot.create_bot import bot
 @create_async_session
 async def check_user_telegram_id_in_db(telegram_id, session=None):
     db_obj = await session.execute(select(User).where(
-            User.telegram_id == telegram_id))
+        User.telegram_id == telegram_id))
     db_obj = db_obj.scalars().first()
     if db_obj:
         return True
@@ -117,3 +118,23 @@ async def get_user_pin_notes(user_id):
         db_objs = db_objs.scalars().all()
     await engine.dispose()
     return db_objs
+
+
+async def get_user_categories_and_notes(user_id):
+    async with AsyncSession(engine) as session:
+        stmt = select(Category).where(Category.user_id == user_id).options(
+            joinedload(Category.notes))
+        result = await session.execute(stmt)
+        categories = result.unique().scalars().all()
+        for category in categories:
+            latest_note = max(
+                category.notes, key=lambda note: note.updated_at, default=None)
+            setattr(category, 'latest_note', latest_note)
+
+            number_of_note_pages = (len(category.notes) // 6)
+            if (len(category.notes) % 6) != 0:
+                number_of_note_pages = (len(category.notes) // 6) + 1
+            setattr(category, 'number_of_note_pages', number_of_note_pages)
+
+    await engine.dispose()
+    return categories
