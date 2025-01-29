@@ -131,27 +131,30 @@ async def get_user_categories_and_notes(user_id):
                 category.notes, key=lambda note: note.updated_at, default=None)
             setattr(category, 'latest_note', latest_note)
 
-            number_of_note_pages = (len(category.notes) // 6)
-            if (len(category.notes) % 6) != 0:
-                number_of_note_pages = (len(category.notes) // 6) + 1
-            setattr(category, 'number_of_note_pages', number_of_note_pages)
+            # number_of_note_pages = (len(category.notes) // 6)
+            # if (len(category.notes) % 6) != 0:
+            #     number_of_note_pages = (len(category.notes) // 6) + 1
+            # setattr(category, 'number_of_note_pages', number_of_note_pages)
 
     await engine.dispose()
     return categories
 
+
 async def get_user_notes_by_category_id(category_id):
     async with AsyncSession(engine) as session:
         db_objs = await session.execute(select(Note).where(
-            Note.category_id == category_id)
+            Note.category_id == category_id).order_by(Note.updated_at))
         db_objs = db_objs.scalars().all()
     await engine.dispose()
     return db_objs
 
-        
+
 async def get_user_note_by_id(note_id):
     async with AsyncSession(engine) as session:
         db_obj = await session.execute(select(Note).where(
-            Note.id == note_id)
-        db_obj = db_objs.scalars().first()
+            Note.id == note_id))
+        db_obj = db_obj.scalars().first()
     await engine.dispose()
     return db_obj
+
+

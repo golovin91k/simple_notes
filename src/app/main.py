@@ -5,8 +5,8 @@ from aiogram.types import Update
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 
-from api.routers import user_router_api
-from bot.handlers.user_router import user_router
+from api.user_router_api import user_router_api
+from bot.handlers.user_router_bot import user_router_bot
 from bot.create_bot import bot, dp, stop_bot, start_bot
 from core.config import settings, BASE_DIR
 from utils import create_user_admin
@@ -15,7 +15,7 @@ from utils import create_user_admin
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await create_user_admin()
-    dp.include_router(user_router)
+    dp.include_router(user_router_bot)
     await start_bot()
     webhook_url = settings.get_webhook_url
     await bot.set_webhook(

@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Form
-from fastapi.requests import Request
+from typing import Optional
+
+from fastapi import APIRouter, Form, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from core.config import BASE_DIR
 from src.app.utils import (
-    check_user_id_and_user_token, get_user_notes, get_user_categories,
-    get_category_id_by_title, get_number_user_pin_notes, get_user_categories_and_notes)
+    check_user_id_and_user_token, get_user_categories,
+    get_category_id_by_title, get_number_user_pin_notes,
+    get_user_categories_and_notes, get_user_notes_by_category_id)
+from src.app.token_encryption import decryption, encryption
 from src.app.services.note_service import NoteService
 
 
@@ -15,8 +18,14 @@ templates = Jinja2Templates(directory=BASE_DIR / 'src' / 'templates')
 
 
 @user_router_api.get(
-    '/create_new_note/{user_id}_{user_token}', response_class=HTMLResponse)
-async def create_new_note(request: Request, user_id: int, user_token: str):
+    '/create_new_note/', response_class=HTMLResponse)
+async def create_new_note(
+        request: Request,
+        user_id: Optional[int] = Query(None),
+        user_token: Optional[str] = Query(None)):
+    if not user_id or not user_token:
+        return 'Нет пользователя или токена'
+    user_token = decryption(user_token)
     if not await check_user_id_and_user_token(user_id, user_token):
         return '404 error'
     user_categories = await get_user_categories(user_id)
@@ -41,8 +50,6 @@ async def successful_note_creation(
         user_id: int = Form(),
         tg_url: str = Form(default=None)):
     category_id = await get_category_id_by_title(user_id, category_title)
-    print(category_title)
-    print(category_id)
     note_service = NoteService()
     await note_service.create_new_note(
         note_title, note_text, note_pin, user_id, category_id, tg_url)
@@ -51,20 +58,17 @@ async def successful_note_creation(
         request=request)
 
 
-# @user_router_api.get(
-#     '/notes/{user_id}_{user_token}')  # response_class=HTMLResponse)
-# async def show_notes(request: Request, user_id: int, user_token: str):
-#     return await get_user_notes(user_id)
-
-
 @user_router_api.get(
-    ('/create_new_note_from_frwd_msg/'
-     '{user_id}_{user_token}/{forw_msg_id}/{tg_canal_name}/'
-     '{is_tg_canal_name}'),
+    ('/create_new_note_from_frwd_msg/'),
     response_class=HTMLResponse)
 async def create_new_note_from_frwd_msg(
-        request: Request, user_id: int, user_token: str,
-        forw_msg_id: int, tg_canal_name: str, is_tg_canal_name: bool):
+        request: Request,
+        user_id: int = Query(...),
+        user_token: str = Query(...),
+        forw_msg_id: int = Query(...),
+        tg_canal_name: str = Query(...),
+        is_tg_canal_name: bool = Query(...)):
+    user_token = decryption(user_token)
     if not await check_user_id_and_user_token(user_id, user_token):
         return '404 error'
     user_categories = await get_user_categories(user_id)
@@ -85,16 +89,29 @@ async def create_new_note_from_frwd_msg(
 
 
 @user_router_api.get(
-    '/{user_id}_{user_token}/categories',
+    '/categories',
     response_class=HTMLResponse)
 async def show_user_categories(
-        request: Request, user_id: int, user_token: str):
+        request: Request,
+        user_id: int = Query(...),
+        user_token: str = Query(...)):
+    user_token = decryption(user_token)
     if not await check_user_id_and_user_token(user_id, user_token):
         return '404 error'
-    # user_categories = await get_user_categories(user_id)
+    user_token = encryption(user_token)
     categories = await get_user_categories_and_notes(user_id)
     for category in categories:
         setattr(category, 'color', 'black')
+        setattr(
+            category, 'notes_link',
+            f'/category_id/{category.id}/notes?user_id={user_id}&user_token={user_token}')
+        for note in category.notes:
+            print(note.id)
+    te = (await get_user_notes_by_category_id(1))
+    for res in te:
+        print(res.id, res.updated_at)
+
+
     context = {
         'categories': categories,
         'user_id': user_id,
@@ -105,17 +122,21 @@ async def show_user_categories(
 
 
 @user_router_api.get(
-    '/{user_id}_{user_token}/category_id/{category_id}'
-    '/notes/{all_pages}_{current_page}')
+    '/category_id/{category_id}/notes/',
+    name="show_category_notes")
 async def show_category_notes(
         request: Request,
-        user_id: int,
-        user_token: str,
         category_id: int,
-        all_pages: int,
-        current_page: int):
+        user_id: int = Query(...),
+        user_token: str = Query(...)):
+    user_token = decryption(user_token)
     print(category_id)
     print(user_id)
     print(user_token)
-    print(all_pages)
-    print(current_page)
+
+
+@user_router_api.get(
+    '/test/')
+async def test_test(
+        request: Request,):
+    return 'test', '444444444444444444444444444444444'

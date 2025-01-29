@@ -2,20 +2,21 @@ from aiogram import F, Router, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 
-# from bot.create_bot import bot
+
 from bot.keyboards.user_kbs import (
     main_user_keyboard, user_inline_keyboard_for_frwd_msg)
 from src.app.utils import (
     check_user_telegram_id_in_db, get_user_id_and_token_by_telegram_id,
     get_user_pin_notes)
+from src.app.token_encryption import encryption
 from src.app.services.user_service import UserService
 from bot.create_bot import bot
 
 
-user_router = Router()
+user_router_bot = Router()
 
 
-@user_router.message(CommandStart())
+@user_router_bot.message(CommandStart())
 async def cmd_start(message: Message) -> None:
     """
     Обрабатывает команду /start.
@@ -25,12 +26,13 @@ async def cmd_start(message: Message) -> None:
         await service.create_new_user(message.from_user.id, False)
     user_id, user_token = await get_user_id_and_token_by_telegram_id(
         message.from_user.id)
+    user_token = encryption(user_token)
     await message.answer(
         'Выберите действие:',
         reply_markup=main_user_keyboard(user_id, user_token))
 
 
-@user_router.message(
+@user_router_bot.message(
     lambda message: message.text in ['Показать закрепленные заметки'])
 async def handle_button_press(message: types.Message):
     user_id = await get_user_id_and_token_by_telegram_id(message.from_user.id)
@@ -43,7 +45,7 @@ async def handle_button_press(message: types.Message):
     await message.delete()
 
 
-@user_router.message()
+@user_router_bot.message()
 async def handle_forwarded_message(message: types.Message):
     current_msg_id = message.message_id
     try:
@@ -57,6 +59,7 @@ async def handle_forwarded_message(message: types.Message):
         pass
     user_id, user_token = await get_user_id_and_token_by_telegram_id(
         message.from_user.id)
+    user_token = encryption(user_token)
     if message.forward_from:
         # Если сообщение переслано от пользователя
         user = message.forward_from
@@ -76,7 +79,7 @@ async def handle_forwarded_message(message: types.Message):
         await message.reply("Это не пересланное сообщение.")
 
 
-@user_router.callback_query(F.data.startswith('delete_msg'))
+@user_router_bot.callback_query(F.data.startswith('delete_msg'))
 async def send_random_person(call: CallbackQuery):
     msg_id = int(call.data.replace('delete_msg_', ''))
     await bot.delete_message(

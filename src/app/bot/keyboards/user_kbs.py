@@ -1,6 +1,6 @@
 from aiogram.types import (ReplyKeyboardMarkup, WebAppInfo,
                            InlineKeyboardButton, InlineKeyboardMarkup)
-from aiogram.utils.keyboard import ReplyKeyboardBuilder  # InlineKeyboardBuilder
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 from src.app.core.config import settings
 
@@ -8,16 +8,15 @@ from src.app.core.config import settings
 def main_user_keyboard(user_id, user_token) -> ReplyKeyboardMarkup:
     kb = ReplyKeyboardBuilder()
     url_app_note_creation = (
-        f'{settings.SITE_URL}/create_new_note/{user_id}_{user_token}')
+        f'{settings.SITE_URL}/create_new_note?'
+        f'user_id={user_id}&user_token={user_token}')
+    print(url_app_note_creation)
     kb.button(
         text='Создать новую заметку', web_app=WebAppInfo(
             url=url_app_note_creation))
     url_app_show_notes = (
-        f'{settings.SITE_URL}/{user_id}_{user_token}/categories')
-    print(url_app_show_notes)
-    print(url_app_note_creation)
-    # kb.button(
-    #     text='Просмотреть все заметки', callback_data='button_pressed')
+        f'{settings.SITE_URL}/categories?'
+        f'user_id={user_id}&user_token={user_token}')
     kb.button(text='Показать закрепленные заметки')
     kb.button(
         text='Просмотреть свои заметки', web_app=WebAppInfo(
@@ -29,10 +28,15 @@ def main_user_keyboard(user_id, user_token) -> ReplyKeyboardMarkup:
 def user_inline_keyboard_for_frwd_msg(
         user_id, user_token, tg_canal_name,
         forw_msg_id, current_msg_id, is_tg_canal_name) -> InlineKeyboardMarkup:
+
     url_app_note_creation_with_fwd_masg = (
-        f'{settings.SITE_URL}/create_new_note_from_frwd_msg/'
-        f'{user_id}_{user_token}/{forw_msg_id}/{tg_canal_name}/'
-        f'{is_tg_canal_name}')
+        f'{settings.SITE_URL}/create_new_note_from_frwd_msg?'
+        f'user_id={user_id}&'
+        f'user_token={user_token}&'
+        f'forw_msg_id={forw_msg_id}&'
+        f'tg_canal_name={tg_canal_name}&'
+        f'is_tg_canal_name={is_tg_canal_name}')
+
     user_inline_kbrd = [
         [InlineKeyboardButton(
             text='Создать заметку из переслан. сообщения', web_app=WebAppInfo(
