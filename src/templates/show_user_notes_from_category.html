@@ -17,6 +17,7 @@
     
     .header-div {
         max-width: 500px;
+        /*height: 20px;*/
         margin: 10px auto;
         padding: 5px 0px;
         background-color: #1B263B;
@@ -38,12 +39,14 @@
         max-width: 500px;
         background: white;
         margin: 10px 10px;
+        /*padding: 10px;*/
         border-radius: 12px;
         border: solid 2px;
     }
     
     .category-header-div {
         max-width: 500px;
+        /*height: 30px;*/
         margin: 0px auto;
         padding: 5px 0px;
         background-color: #415A77;
@@ -54,6 +57,7 @@
     
     .note-header-div {
         max-width: 500px;
+        /*height: 30px;*/
         margin: 0px auto;
         padding: 5px 0px;
         background-color: #415A77;
@@ -88,7 +92,7 @@
         color: #243444;
         margin: 0px;  
     }
-    
+   
     a {
         text-decoration: none;
     }
@@ -111,7 +115,8 @@
       <div class="header-div">
         <p class="p-note" style="color: white;"> Заметки категории ((CATEGORY)):</p>    
       </div>
-
+      {% for note in noties %}
+      <a href="">
           <div class="note-div">
               <div class="note-header-div">
                    <p class="p-note" style="color: white;">{{note.title}}</p> 
@@ -121,18 +126,46 @@
              <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{note.text}}  </p>
             </div>
     
-
+            {% if note.link_to_forwd_msg%}
             <div class="div-flex" style="max-width: 450px;">
               <p class="p-default" style="padding-left: 10px"> Ссылка: </p>
               <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{note.link_to_forwd_msg}}  </p>
              </div>
-
+            {% endif %}
     
             <div class="div-flex">
              <p class="p-default" style="padding-left: 10px"> Дата:</p>
              <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{note.updated_at}} </p>
             </div>  
           </div>
+      </a>
+      {% endfor %}
+      
+      <div class="div-flex" style="max-width: 100%; justify-content: space-around; align-items: center;">
+        
+        <div class="div-flex" style="max-width: 100%; justify-content: center; align-items: center;">
+
+          {% if current_page > 1 %}
+          <div class="div-flex">
+            <a href="{{back_url}}" class="button"> Назад </a>
+          </div>
+          {% endif %}
+          <div class="div-flex">
+            <p class="p-default" style="font-size: 14pt"> стр. {{current_page}}/{{num_note_pgs}} </p>
+          </div>
+          {% if current_page < num_note_pgs %}
+          <div class="div-flex">
+            <a href="{{forw_url}}" class="button"> Вперед </a>
+          </div>
+          {% endif %}
+         </div>
+
+        <div class="div-flex">
+          <a href="/categories?user_id={{user_id}}&user_token={{user_token}}" class="button" style="white-space: nowrap;">К категориям</a>
+        </div>
+
+      </div>
+     
     </div>
   </body>
 </html>
