@@ -7,3 +7,5 @@ ngrok http 5050
 uvicorn main:app --port 5050
 
 @starlink_g91k_bot
+
+7504369183

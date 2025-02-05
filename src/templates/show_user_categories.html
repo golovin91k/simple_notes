@@ -64,37 +64,7 @@
         color: #243444;
         margin: 0px;  
     }
-    
-    .category-div-for-p {
-        display: flex;
-        padding-left: 5px;
-        padding-right: 5px
-    }
-    
-    .category-block {
-        background: #fff;
-        margin: 10px auto 20px auto;
-        padding: 0px;
-        border-radius: 12px;
-        border: solid;
-        /*border-color: rgb(99,160,232);*/
-        border-color: grey;
-        max-width: 450px;
-    }
-    
-    
-    .category-button {
-        background: #043464;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        width: 100%;
-        height: 25px;
-    }
-    
+
     a {
         text-decoration: none;
     }
@@ -103,7 +73,7 @@
   <body>
     <div class="main-container">
       <div class="header-div">
-        <p class="p-category" style="color: white;">Выберите категорию заметок</p>    
+        <p class="p-category" style="color: white;">Выберите категорию заметок:</p>    
       </div>
       
       {% for category in categories %}
@@ -129,37 +99,5 @@
       {% endfor %}
 
     </div>
-
-    <!--<div class="container">-->
-    <!--  <div class="blue-div">-->
-    <!--  <p class="p-category" style="text-align: center; color: white"> Выберите категорию заметок: </p>-->
-    <!--  </div>-->
-    <!--  <a href="product-page.html" class="product-card">-->
-    <!--  <div class="category-block">-->
-    <!--    <div class="category-div-for-p">-->
-    <!--      <p class="p-category"> Категория: </p>-->
-    <!--      <p class="p-category" style="color: red;"> ((Без категории)) </p>-->
-    <!--    </div>-->
-    <!--    <div class="category-div-for-p" style="margin-top: 10px;">-->
-    <!--      <p class="p-category"> Последняя созданная или измененная заметка: </p>-->
-    <!--    </div>  -->
-    <!--    <div class="category-div-for-p" style="justify-content: space-between">-->
-    <!--      <div class="category-div-for-p" style="padding-left: 0px">-->
-    <!--        <p class="p-category"> Название: </p>-->
-    <!--        <p class="p-category" style="color: red;"> ((Название)) </p>-->
-    <!--      </div>-->
-    <!--      <div class="category-div-for-p">-->
-    <!--        <p class="p-category"> Дата: </p>-->
-    <!--        <p class="p-category" style="color: red;"> ((Дата))</p>-->
-    <!--      </div>-->
-    <!--    </div>-->
-    <!--    <div class="category-div-for-p">-->
-    <!--      <p class="p-category"> Текст: </p>-->
-    <!--      <p class="p-category" style="color: red;"> ((Текст)) </p>-->
-    <!--    </div>-->
-        <!--<button class="category-button" style="border-top-left-radius: 0px; border-top-right-radius: 0px">Просмотреть заметки</button>-->
-    <!--  </div>-->
-    <!--  </a>-->
-    <!--</div>-->
   </body>
 </html>

@@ -131,22 +131,33 @@ async def get_user_categories_and_notes(user_id):
                 category.notes, key=lambda note: note.updated_at, default=None)
             setattr(category, 'latest_note', latest_note)
 
-            # number_of_note_pages = (len(category.notes) // 6)
-            # if (len(category.notes) % 6) != 0:
-            #     number_of_note_pages = (len(category.notes) // 6) + 1
-            # setattr(category, 'number_of_note_pages', number_of_note_pages)
+            num_note_pgs = (len(category.notes) // 6)
+            if (len(category.notes) % 6) != 0:
+                num_note_pgs = (len(category.notes) // 6) + 1
+            setattr(category, 'num_note_pgs', num_note_pgs)
 
     await engine.dispose()
     return categories
 
 
-async def get_user_notes_by_category_id(category_id):
+async def get_user_notes_by_category_id(
+        category_id, skip, limit):
     async with AsyncSession(engine) as session:
         db_objs = await session.execute(select(Note).where(
-            Note.category_id == category_id).order_by(Note.updated_at))
+            Note.category_id == category_id).order_by(
+                Note.updated_at).offset(skip).limit(limit))
         db_objs = db_objs.scalars().all()
     await engine.dispose()
     return db_objs
+
+
+async def get_count_notes_by_category_id(category_id):
+    async with AsyncSession(engine) as session:
+        db_objs = await session.execute(select(Note).where(
+            Note.category_id == category_id))
+        db_objs = db_objs.scalars().all()
+    await engine.dispose()
+    return len(db_objs)
 
 
 async def get_user_note_by_id(note_id):
@@ -158,3 +169,11 @@ async def get_user_note_by_id(note_id):
     return db_obj
 
 
+@create_async_session
+async def check_user_id_and_category_id(user_id, category_id, session=None):
+    db_obj = await session.execute(select(Category).where(
+        Category.id == category_id, Category.user_id == user_id))
+    db_obj = db_obj.scalars().first()
+    if db_obj:
+        return True
+    return False

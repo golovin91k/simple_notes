@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import Boolean, ForeignKey, func, String, Text
+from sqlalchemy import BigInteger, Boolean, ForeignKey, func, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 # from sqlalchemy_utils import URLType
 
@@ -17,7 +17,8 @@ class Base(DeclarativeBase):
 
 class User(Base):
     __tablename__ = 'users'
-    telegram_id: Mapped[int] = mapped_column(unique=True, nullable=False)
+    telegram_id: Mapped[int] = mapped_column(
+        BigInteger, unique=True, nullable=False)
     token: Mapped[str] = mapped_column(unique=True, nullable=False)
     is_admin: Mapped[bool] = mapped_column(Boolean(), default=False)
     notes: Mapped[List['Note']] = relationship(

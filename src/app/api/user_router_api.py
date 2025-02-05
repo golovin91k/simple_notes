@@ -8,7 +8,8 @@ from core.config import BASE_DIR
 from src.app.utils import (
     check_user_id_and_user_token, get_user_categories,
     get_category_id_by_title, get_number_user_pin_notes,
-    get_user_categories_and_notes, get_user_notes_by_category_id)
+    get_user_categories_and_notes, get_user_notes_by_category_id,
+    check_user_id_and_category_id, get_count_notes_by_category_id)
 from src.app.token_encryption import decryption, encryption
 from src.app.services.note_service import NoteService
 
@@ -37,25 +38,6 @@ async def create_new_note(
     return templates.TemplateResponse(
         name='create_new_note.html',
         request=request, context=context)
-
-
-@user_router_api.post(
-    '/successful_note_creation', response_class=HTMLResponse)
-async def successful_note_creation(
-        request: Request,
-        category_title: str = Form(default='Без категории'),
-        note_title: str = Form(min_length=1, max_length=20),
-        note_text: str = Form(min_length=1, max_length=500),
-        note_pin: bool = Form(default=False),
-        user_id: int = Form(),
-        tg_url: str = Form(default=None)):
-    category_id = await get_category_id_by_title(user_id, category_title)
-    note_service = NoteService()
-    await note_service.create_new_note(
-        note_title, note_text, note_pin, user_id, category_id, tg_url)
-    return templates.TemplateResponse(
-        name='successful_note_creation.html',
-        request=request)
 
 
 @user_router_api.get(
@@ -88,6 +70,25 @@ async def create_new_note_from_frwd_msg(
         request=request, context=context)
 
 
+@user_router_api.post(
+    '/successful_note_creation', response_class=HTMLResponse)
+async def successful_note_creation(
+        request: Request,
+        category_title: str = Form(default='Без категории'),
+        note_title: str = Form(min_length=1, max_length=20),
+        note_text: str = Form(min_length=1, max_length=500),
+        note_pin: bool = Form(default=False),
+        user_id: int = Form(),
+        tg_url: str = Form(default=None)):
+    category_id = await get_category_id_by_title(user_id, category_title)
+    note_service = NoteService()
+    await note_service.create_new_note(
+        note_title, note_text, note_pin, user_id, category_id, tg_url)
+    return templates.TemplateResponse(
+        name='successful_note_creation.html',
+        request=request)
+
+
 @user_router_api.get(
     '/categories',
     response_class=HTMLResponse)
@@ -104,14 +105,10 @@ async def show_user_categories(
         setattr(category, 'color', 'black')
         setattr(
             category, 'notes_link',
-            f'/category_id/{category.id}/notes?user_id={user_id}&user_token={user_token}')
-        for note in category.notes:
-            print(note.id)
-    te = (await get_user_notes_by_category_id(1))
-    for res in te:
-        print(res.id, res.updated_at)
-
-
+            (f'/category_id/{category.id}/notes?'
+             f'num_note_pgs={category.num_note_pgs}&current_page=1&'
+             f'user_id={user_id}&user_token={user_token}'))
+        print(category.num_note_pgs)
     context = {
         'categories': categories,
         'user_id': user_id,
@@ -122,21 +119,38 @@ async def show_user_categories(
 
 
 @user_router_api.get(
-    '/category_id/{category_id}/notes/',
-    name="show_category_notes")
-async def show_category_notes(
+    '/category_id/{category_id}/notes',
+    response_class=HTMLResponse)
+async def show_notes_from_category(
         request: Request,
         category_id: int,
+        num_note_pgs: int = Query(...),
+        current_page: int = Query(...),
         user_id: int = Query(...),
         user_token: str = Query(...)):
-    user_token = decryption(user_token)
-    print(category_id)
-    print(user_id)
-    print(user_token)
+    noties = await get_user_notes_by_category_id(
+        category_id, (current_page-1)*6, 6)
+    b_url = current_page - 1
+    f_url = current_page + 1
 
+    back_url = (
+        f'/category_id/{category_id}/notes?'
+        f'num_note_pgs={num_note_pgs}&current_page={b_url}&'
+        f'user_id={user_id}&user_token={user_token}')
 
-@user_router_api.get(
-    '/test/')
-async def test_test(
-        request: Request,):
-    return 'test', '444444444444444444444444444444444'
+    forw_url = (
+        f'/category_id/{category_id}/notes?'
+        f'num_note_pgs={num_note_pgs}&current_page={f_url}&'
+        f'user_id={user_id}&user_token={user_token}')
+
+    context = {
+        'noties': noties,
+        'user_id': user_id,
+        'user_token': user_token,
+        'num_note_pgs': num_note_pgs,
+        'current_page': current_page,
+        'back_url': back_url,
+        'forw_url': forw_url}
+    return templates.TemplateResponse(
+        name='show_user_notes_from_category.html',
+        request=request, context=context)
