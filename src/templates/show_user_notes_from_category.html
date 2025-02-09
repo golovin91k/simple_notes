@@ -116,7 +116,7 @@
         <p class="p-note" style="color: white;"> Заметки категории ((CATEGORY)):</p>    
       </div>
       {% for note in noties %}
-      <a href="">
+      <a href="/notes/{{note.id}}?user_id={{user_id}}&user_token={{user_token}}">
           <div class="note-div">
               <div class="note-header-div">
                    <p class="p-note" style="color: white;">{{note.title}}</p> 

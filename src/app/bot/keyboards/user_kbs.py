@@ -10,7 +10,6 @@ def main_user_keyboard(user_id, user_token) -> ReplyKeyboardMarkup:
     url_app_note_creation = (
         f'{settings.SITE_URL}/create_new_note?'
         f'user_id={user_id}&user_token={user_token}')
-    print(url_app_note_creation)
     kb.button(
         text='Создать новую заметку', web_app=WebAppInfo(
             url=url_app_note_creation))

@@ -9,7 +9,8 @@ from src.app.utils import (
     check_user_id_and_user_token, get_user_categories,
     get_category_id_by_title, get_number_user_pin_notes,
     get_user_categories_and_notes, get_user_notes_by_category_id,
-    check_user_id_and_category_id, get_count_notes_by_category_id)
+    check_user_id_and_category_id, get_count_notes_by_category_id,
+    get_user_note_by_id)
 from src.app.token_encryption import decryption, encryption
 from src.app.services.note_service import NoteService
 
@@ -19,7 +20,7 @@ templates = Jinja2Templates(directory=BASE_DIR / 'src' / 'templates')
 
 
 @user_router_api.get(
-    '/create_new_note/', response_class=HTMLResponse)
+    '/create_new_note', response_class=HTMLResponse)
 async def create_new_note(
         request: Request,
         user_id: Optional[int] = Query(None),
@@ -36,7 +37,7 @@ async def create_new_note(
         'user_categories': user_categories,
         'user_pinned_notes': user_pinned_notes}
     return templates.TemplateResponse(
-        name='create_new_note.html',
+        name='note_form.html',
         request=request, context=context)
 
 
@@ -66,7 +67,7 @@ async def create_new_note_from_frwd_msg(
         'user_pinned_notes': user_pinned_notes,
         'tg_url': tg_url}
     return templates.TemplateResponse(
-        name='create_new_note.html',
+        name='note_form.html',
         request=request, context=context)
 
 
@@ -153,4 +154,30 @@ async def show_notes_from_category(
         'forw_url': forw_url}
     return templates.TemplateResponse(
         name='show_user_notes_from_category.html',
+        request=request, context=context)
+
+
+@user_router_api.get(
+    '/notes/{note_id}',
+    response_class=HTMLResponse)
+async def show_note(
+        request: Request,
+        # category_id: int,
+        # num_note_pgs: int = Query(...),
+        # current_page: int = Query(...),
+        note_id: int,
+        user_id: int = Query(...),
+        user_token: str = Query(...)):
+    note = await get_user_note_by_id(note_id)
+    context = {
+        'note': note,
+        'user_id': user_id,
+        'user_token': user_token,
+        # 'num_note_pgs': num_note_pgs,
+        # 'current_page': current_page,
+        # 'back_url': back_url,
+        # 'forw_url': forw_url
+        }
+    return templates.TemplateResponse(
+        name='note.html',
         request=request, context=context)

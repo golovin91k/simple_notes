@@ -10,9 +10,6 @@ iv = os.urandom(16)   # Инициализационный вектор
 
 def encryption(token):
     # Преобразуем строку в байты и шифруем
-    print(key)
-    print('________________________')
-    print(iv)
     cipher = AES.new(key, AES.MODE_CBC, iv)
     encrypted_token = cipher.encrypt(pad(token.encode(), AES.block_size))
 
@@ -39,16 +36,3 @@ def decryption(token):
         decrypted_token_str = decrypted_token  # Возвращаем как байты
         print('ne poluchilos')
     return decrypted_token_str
-
-
-asd = '1'
-
-enc_asd = encryption(asd)
-decr_asd = decryption(enc_asd)
-
-print(enc_asd)
-
-print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-
-print(decr_asd)
-
