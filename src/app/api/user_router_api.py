@@ -86,7 +86,7 @@ async def successful_note_creation(
     await note_service.create_new_note(
         note_title, note_text, note_pin, user_id, category_id, tg_url)
     return templates.TemplateResponse(
-        name='successful_note_creation.html',
+        name='successful_note.html',
         request=request)
 
 
@@ -109,13 +109,12 @@ async def show_user_categories(
             (f'/category_id/{category.id}/notes?'
              f'num_note_pgs={category.num_note_pgs}&current_page=1&'
              f'user_id={user_id}&user_token={user_token}'))
-        print(category.num_note_pgs)
     context = {
         'categories': categories,
         'user_id': user_id,
         'user_token': user_token}
     return templates.TemplateResponse(
-        name='show_user_categories.html',
+        name='user_categories.html',
         request=request, context=context)
 
 
@@ -134,6 +133,11 @@ async def show_notes_from_category(
     b_url = current_page - 1
     f_url = current_page + 1
 
+    current_url = (
+        f'/category_id/{category_id}/notes?'
+        f'num_note_pgs={num_note_pgs}&current_page={current_page}&'
+        f'user_id={user_id}&user_token={user_token}')
+
     back_url = (
         f'/category_id/{category_id}/notes?'
         f'num_note_pgs={num_note_pgs}&current_page={b_url}&'
@@ -150,10 +154,12 @@ async def show_notes_from_category(
         'user_token': user_token,
         'num_note_pgs': num_note_pgs,
         'current_page': current_page,
+        'current_url': current_url,
         'back_url': back_url,
-        'forw_url': forw_url}
+        'forw_url': forw_url,
+        'category_id': category_id}
     return templates.TemplateResponse(
-        name='show_user_notes_from_category.html',
+        name='user_notes_from_category.html',
         request=request, context=context)
 
 
@@ -162,22 +168,51 @@ async def show_notes_from_category(
     response_class=HTMLResponse)
 async def show_note(
         request: Request,
-        # category_id: int,
-        # num_note_pgs: int = Query(...),
-        # current_page: int = Query(...),
         note_id: int,
+        category_id: int = Query(...),
+        num_note_pgs: int = Query(...),
+        current_page: int = Query(...),
         user_id: int = Query(...),
         user_token: str = Query(...)):
     note = await get_user_note_by_id(note_id)
+    current_url = (
+        f'/category_id/{category_id}/notes?'
+        f'num_note_pgs={num_note_pgs}&current_page={current_page}&'
+        f'user_id={user_id}&user_token={user_token}')
     context = {
         'note': note,
         'user_id': user_id,
         'user_token': user_token,
-        # 'num_note_pgs': num_note_pgs,
-        # 'current_page': current_page,
-        # 'back_url': back_url,
-        # 'forw_url': forw_url
-        }
+        'current_url': current_url}
     return templates.TemplateResponse(
         name='note.html',
+        request=request, context=context)
+
+
+@user_router_api.get(
+    '/notes/{note_id}/edit',
+    response_class=HTMLResponse)
+async def edit_note(
+        request: Request,
+        note_id: int,
+        # category_id: int = Query(...),
+        # num_note_pgs: int = Query(...),
+        # current_page: int = Query(...),
+        user_id: int = Query(...),):
+        # user_token: str = Query(...)):
+    user_categories = await get_user_categories(user_id)
+    note = await get_user_note_by_id(note_id)
+    # current_url = (
+    #     f'/category_id/{category_id}/notes?'
+    #     f'num_note_pgs={num_note_pgs}&current_page={current_page}&'
+    #     f'user_id={user_id}&user_token={user_token}')
+    context = {
+        'note': note,
+        'user_categories': user_categories,
+        # 'user_id': user_id,
+        # 'user_token': user_token,
+        # 'current_url': current_url
+        }
+    return templates.TemplateResponse(
+        name='note_form_edit.html',
         request=request, context=context)
