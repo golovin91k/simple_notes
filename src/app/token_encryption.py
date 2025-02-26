@@ -1,5 +1,7 @@
 import base64
 import os
+import hashlib
+
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 

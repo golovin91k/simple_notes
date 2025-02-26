@@ -1,5 +1,3 @@
-
-
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -43,12 +41,9 @@ async def check_user_id_and_user_token(user_id, user_token, session=None):
 
 
 async def create_user_admin():
-    try:
-        service = UserService()
-        await service.create_new_user(
+    service = UserService()
+    await service.create_new_user(
             settings.ADMIN_TELEGRAM_ID, is_admin=True)
-    except Exception:
-        print('admin uje sozdan')
 
 
 async def get_user_notes(user_id):
@@ -94,10 +89,10 @@ async def create_test_data():
         await session.commit()
 
 
-async def send_message_for_admin():
+async def send_message_for_admin(message):
     try:
         await bot.send_message(
-            settings.ADMIN_TELEGRAM_ID, 'Создан новый пользователь.')
+            settings.ADMIN_TELEGRAM_ID, message)
     except Exception:
         pass
 
@@ -132,7 +127,7 @@ async def get_user_categories_and_notes(user_id):
             setattr(category, 'latest_note', latest_note)
 
             num_note_pgs = (len(category.notes) // 6)
-            if (len(category.notes) % 6) != 0:
+            if ((len(category.notes) % 6) != 0) or (len(category.notes) == 0):
                 num_note_pgs = (len(category.notes) // 6) + 1
             setattr(category, 'num_note_pgs', num_note_pgs)
 

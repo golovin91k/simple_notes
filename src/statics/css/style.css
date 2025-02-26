@@ -20,7 +20,7 @@ body {
   border-top-right-radius: 12px;
 }
 
-.header-div-note-form {
+.header-div-note-form, .header-div-category-form {
   max-width: 500px;
   margin: 0px auto;
   padding: 5px 0px;

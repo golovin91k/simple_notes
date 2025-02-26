@@ -4,25 +4,33 @@ import secrets
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.config import settings
 from core.connection_to_db import engine
 from models.models import User, Category
-from bot.create_bot import bot
+from .base_service import BaseService
 
 
-class UserService:
+class UserService(BaseService):
     async def create_new_user(self, telegram_id, is_admin=False):
         async with AsyncSession(engine) as session:
-            new_user = User(
-                telegram_id=telegram_id,
-                token=await self.generate_token(),
-                is_admin=is_admin)
-            session.add(new_user)
-            await session.commit()
-            await session.refresh(new_user)
+            try:
+                new_user = User(
+                    telegram_id=telegram_id,
+                    token=await self.generate_token(),
+                    is_admin=is_admin)
+                session.add(new_user)
+                await session.commit()
+                await session.refresh(new_user)
+                await self.create_category_without_a_title(new_user.id)
+                await self.send_message_for_admin(
+                    f'Создан новый пользователь'
+                    f'с telegram_id {telegram_id}')
+            except Exception as e:
+                await self.send_message_for_admin(
+                    f'Возникла ошибка при создании нового'
+                    f'пользователя с telegram_id {telegram_id}'
+                    f'{e}')
+                await session.rollback()
         await engine.dispose()
-        await self.create_category_without_a_title(new_user.id)
-        await self.send_message_for_admin('Создан новый пользователь.')
 
     async def check_token(self, token_for_checking):
         async with AsyncSession(engine) as session:
@@ -51,10 +59,3 @@ class UserService:
             await session.commit()
             await session.refresh(cat_without_title)
         await engine.dispose()
-
-    async def send_message_for_admin(self, message):
-        try:
-            await bot.send_message(
-                settings.ADMIN_TELEGRAM_ID, message)
-        except Exception:
-            pass

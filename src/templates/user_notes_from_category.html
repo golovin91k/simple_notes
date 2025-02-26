@@ -13,7 +13,7 @@
       <a href="/notes/{{note.id}}?category_id={{category_id}}&num_note_pgs={{num_note_pgs}}&current_page={{current_page}}&user_id={{user_id}}&user_token={{user_token}}">
           <div class="note-div">
               <div class="note-header-div">
-                   <p class="p-note" style="color: white;">{{note.title}}</p> 
+                   <p class="p-note" style="color: white;">{{note.title}} {% if note.is_pinned%}✔{% endif %}  </p> 
               </div>
             <div class="div-flex" style="max-width: 450px;">
              <p class="p-default" style="padding-left: 10px"> Текст: </p>
@@ -30,32 +30,30 @@
             <div class="div-flex">
              <p class="p-default" style="padding-left: 10px"> Дата:</p>
              <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{note.updated_at}} </p>
-            </div>  
+            </div>
           </div>
       </a>
       {% endfor %}
       
-      <div class="div-flex" style="max-width: 100%; justify-content: space-around; align-items: center;">
+      <div class="div-flex" style="max-width: 100%; justify-content: space-around; align-items: center; margin-top: 20px; margin-bottom: 10px">
         
-        <div class="div-flex" style="max-width: 100%; justify-content: center; align-items: center;">
+        <div class="div-flex" style="max-width: 100%; align-items: center;">
 
           {% if current_page > 1 %}
-          <div class="div-flex">
+          <div class="div-flex" style="position: absolute; left: 5%">
             <a href="{{back_url}}" class="button"> Назад </a>
           </div>
           {% endif %}
-          <div class="div-flex">
-            <p class="p-default" style="font-size: 14pt"> стр. {{current_page}}/{{num_note_pgs}} </p>
+          <div class="div-flex" style="position: absolute; left: 20%">
+            <p class="p-default" style="font-size: 14pt;"> стр. {{current_page}}/{{num_note_pgs}} </p>
           </div>
           {% if current_page < num_note_pgs %}
-          <div class="div-flex">
+          <div class="div-flex" style="position: absolute; left: 42%">
             <a href="{{forw_url}}" class="button"> Вперед </a>
           </div>
           {% endif %}
-         </div>
-
-        <div class="div-flex">
-          <a href="/categories?user_id={{user_id}}&user_token={{user_token}}" class="button" style="white-space: nowrap;">К категориям</a>
+         <div class="div-flex" style="position: absolute; right: 5%;">
+          <a href="{{to_categories_url}}" class="button" style="white-space: nowrap; right: 5%;">К категориям</a>
         </div>
 
       </div>
