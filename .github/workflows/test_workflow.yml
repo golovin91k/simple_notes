@@ -3,7 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main  # Запускать workflow при пуше в ветку main
+      - asc# Запускать workflow при пуше в ветку main
 
 jobs:
   deploy:

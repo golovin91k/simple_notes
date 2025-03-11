@@ -23,6 +23,16 @@ jobs:
           source: "infra/nginx.conf"  # Путь к файлу относительно корня репозитория
           target: "/home/simple_notes_bot/"  # Путь на удаленном сервере
 
+      - name: Copy docker-compose.production
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}  # Используйте password или key
+          # key: ${{ secrets.SSH_KEY }}     # Если используете SSH-ключ
+          source: "infra/docker-compose.production.yml"  # Путь к файлу относительно корня репозитория
+          target: "/home/simple_notes_bot/"  # Путь на удаленном сервере
+
       - name: Executing remote commands
         uses: appleboy/ssh-action@master
         with:
