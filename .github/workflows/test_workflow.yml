@@ -1,22 +1,24 @@
-name: Debug Workflow
+name: Deploy to Server
 
 on:
   push:
     branches:
-      - main
+      - main  # Запускать workflow при пуше в ветку main
 
 jobs:
-  debug:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  # Клонирует репозиторий в рабочую директорию
 
-      - name: Print current directory
-        run: |
-          echo "Текущая папка: $(pwd)"
-
-      - name: List files after checkout
-        run: |
-          ls -R
+      - name: Copy file via SCP
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}  # Используйте password или key
+          # key: ${{ secrets.SSH_KEY }}     # Если используете SSH-ключ
+          source: "888.txt"  # Путь к файлу относительно корня репозитория
+          target: "/root/simple_notes_bot/"  # Путь на удаленном сервере
