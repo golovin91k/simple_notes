@@ -21,4 +21,4 @@ jobs:
           password: ${{ secrets.PASSWORD }}  # Используйте password или key
           # key: ${{ secrets.SSH_KEY }}     # Если используете SSH-ключ
           source: "888.txt"  # Путь к файлу относительно корня репозитория
-          target: "/root/simple_notes_bot/"  # Путь на удаленном сервере
+          target: "/home/simple_notes_bot/"  # Путь на удаленном сервере
