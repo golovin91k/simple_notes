@@ -1,0 +1,37 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main  # Запускать workflow при пуше в ветку main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  # Клонирует репозиторий в рабочую директорию
+
+      - name: Copy nginx.conf
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}  # Используйте password или key
+          # key: ${{ secrets.SSH_KEY }}     # Если используете SSH-ключ
+          source: "infra/nginx.conf"  # Путь к файлу относительно корня репозитория
+          target: "/home/simple_notes_bot/"  # Путь на удаленном сервере
+
+      - name: Executing remote commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd /home/simple_notes_bot/infra/
+            docker compose -f docker-compose.production.yml pull
+            docker compose -f docker-compose.production.yml down
+            docker compose -f docker-compose.production.yml up -d
+            docker system prune -a -f
