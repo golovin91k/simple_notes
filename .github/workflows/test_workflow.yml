@@ -1,4 +1,4 @@
-name: Print Current Directory
+name: Deploy to Server
 
 on:
   push:
@@ -6,13 +6,13 @@ on:
       - main
 
 jobs:
-  print-directory:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Print current directory
+      - name: List files in infra/
         run: |
-          echo "Текущая папка: $(pwd)"
+          ls -R simple_notes/simple_notes/infra/
