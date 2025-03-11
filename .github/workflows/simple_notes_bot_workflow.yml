@@ -41,7 +41,20 @@ jobs:
         username: ${{ secrets.USER }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" infra/docker-compose.production.yml ${{ secrets.USER }}@${{ secrets.HOST }}:/root/simple_notes_bot/
+          echo "Checking directory /root/simple_notes_bot/"
+          ls -la /root/simple_notes_bot/
+          if [ -d /root/simple_notes_bot/ ]; then
+            echo "Directory exists!"
+            touch /root/simple_notes_bot/testfile
+            if [ -f /root/simple_notes_bot/testfile ]; then
+              echo "Write permissions are OK!"
+              rm /root/simple_notes_bot/testfile
+            else
+              echo "No write permissions!"
+            fi
+          else
+            echo "Directory does not exist!"
+          fi
     - name: Copy nginx.conf via ssh
       uses: appleboy/scp-action@master
       with:
