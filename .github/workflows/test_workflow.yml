@@ -1,15 +1,18 @@
-name: simple_notes_bot workflow
+name: Print Current Directory
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
 
 jobs:
-  test_copy:
+  print-directory:
     runs-on: ubuntu-latest
+
     steps:
-      - name: List files in infra/
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Print current directory
         run: |
-          ls -R infra/
+          echo "Текущая папка: $(pwd)"
