@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Debug Workflow
 
 on:
   push:
@@ -6,10 +6,17 @@ on:
       - main
 
 jobs:
-  deploy:
+  debug:
     runs-on: ubuntu-latest
 
     steps:
-      - name: List files recursively
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Print current directory
+        run: |
+          echo "Текущая папка: $(pwd)"
+
+      - name: List files after checkout
         run: |
           ls -R
