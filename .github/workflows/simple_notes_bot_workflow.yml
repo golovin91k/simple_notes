@@ -39,7 +39,7 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        password: ${{ secrets.PASSWORD }}
         source: "infra/docker-compose.production.yml"
         target: "/simple_notes_bot/"
     - name: Copy nginx.conf via ssh
@@ -47,7 +47,7 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        password: ${{ secrets.PASSWORD }}
         source: "infra/nginx.conf"
         target: "/simple_notes_bot/"
     - name: Executing remote ssh commands to deploy
@@ -55,7 +55,7 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        password: ${{ secrets.PASSWORD }}
         script: |
           cd /simple_notes_bot/infra/
           docker compose -f docker-compose.production.yml pull
