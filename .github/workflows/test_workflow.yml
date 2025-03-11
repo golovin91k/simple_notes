@@ -1,0 +1,22 @@
+name: simple_notes_bot workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  test_copy:
+    runs-on: ubuntu-latest
+    needs: 
+        - build_and_push_to_docker_hub
+    steps:
+    - name: Create directory if not exists
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PASSWORD }}  # Или key: ${{ secrets.SSH_KEY }}
+        script: |
+          mkdir -p /root/222simple_notes_bot/
