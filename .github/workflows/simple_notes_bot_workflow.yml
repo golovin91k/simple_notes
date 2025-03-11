@@ -41,7 +41,7 @@ jobs:
         username: ${{ secrets.USER }}
         password: ${{ secrets.PASSWORD }}
         source: "infra/docker-compose.production.yml"
-        target: "root/simple_notes_bot/"
+        target: "opt/simple_notes_bot/"
     - name: Copy nginx.conf via ssh
       uses: appleboy/scp-action@master
       with:
