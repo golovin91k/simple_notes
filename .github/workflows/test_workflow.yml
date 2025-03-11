@@ -9,8 +9,6 @@ on:
 jobs:
   test_copy:
     runs-on: ubuntu-latest
-    needs: 
-        - build_and_push_to_docker_hub
     steps:
     - name: Create directory if not exists
       uses: appleboy/ssh-action@master
