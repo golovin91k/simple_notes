@@ -10,12 +10,6 @@ jobs:
   test_copy:
     runs-on: ubuntu-latest
     steps:
-      - name: Copy file via SCP
-        uses: appleboy/scp-action@v0.1.0
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          password: ${{ secrets.PASSWORD }}  # Используйте password или key
-          # key: ${{ secrets.SSH_KEY }}     # Если используете SSH-ключ
-          source: "simple_notes/888.txt"  # Путь к файлу в репозитории
-          target: "/simple_notes_bot/"  # Путь на удаленном сервере
+      - name: List files in infra/
+        run: |
+          ls -R infra/
