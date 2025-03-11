@@ -8,13 +8,13 @@ from src.app.core.config import settings
 def main_user_keyboard(user_id, user_token) -> ReplyKeyboardMarkup:
     kb = ReplyKeyboardBuilder()
     url_app_note_creation = (
-        f'{settings.SITE_URL}/create_new_note?'
+        f'{settings.SITE_URL}/simple_notes_bot/create_new_note?'
         f'user_id={user_id}&user_token={user_token}')
     kb.button(
         text='Создать новую заметку', web_app=WebAppInfo(
             url=url_app_note_creation))
     url_app_show_notes = (
-        f'{settings.SITE_URL}/categories?'
+        f'{settings.SITE_URL}/simple_notes_bot/categories?'
         f'user_id={user_id}&user_token={user_token}')
     kb.button(text='Показать закрепленные заметки')
     kb.button(

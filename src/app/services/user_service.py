@@ -10,23 +10,25 @@ from .base_service import BaseService
 
 
 class UserService(BaseService):
-    async def create_new_user(self, telegram_id, is_admin=False):
+    async def create_new_user(
+            self, telegram_id, is_admin=False, is_active=True):
         async with AsyncSession(engine) as session:
             try:
                 new_user = User(
                     telegram_id=telegram_id,
                     token=await self.generate_token(),
-                    is_admin=is_admin)
+                    is_admin=is_admin,
+                    is_active=is_active)
                 session.add(new_user)
                 await session.commit()
                 await session.refresh(new_user)
                 await self.create_category_without_a_title(new_user.id)
                 await self.send_message_for_admin(
-                    f'Создан новый пользователь'
+                    f'Создан новый пользователь '
                     f'с telegram_id {telegram_id}')
             except Exception as e:
                 await self.send_message_for_admin(
-                    f'Возникла ошибка при создании нового'
+                    f'Возникла ошибка при создании нового '
                     f'пользователя с telegram_id {telegram_id}'
                     f'{e}')
                 await session.rollback()

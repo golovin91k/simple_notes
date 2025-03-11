@@ -2,9 +2,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.connection_to_db import engine
 from models.models import Category
+from .base_service import BaseService
 
 
-class CategoryService():
+class CategoryService(BaseService):
     async def create_new_category(
             self, title, user_id):
         async with AsyncSession(engine) as session:
@@ -15,9 +16,11 @@ class CategoryService():
                 session.add(new_category)
                 await session.commit()
                 await session.refresh(new_category)
-                print('sozdana novaya categoriya')
             except Exception as e:
-                print(f'Ошибка при создании категории: {e}')
+                await self.send_message_for_admin(
+                    f'Возникла ошибка при создании новой'
+                    f'категории с названием {title}'
+                    f'пользователем с user_id {user_id}'
+                    f'{e}')
                 await session.rollback()
-                raise
         await engine.dispose()

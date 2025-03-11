@@ -20,6 +20,7 @@ class User(Base):
     telegram_id: Mapped[int] = mapped_column(
         BigInteger, unique=True, nullable=False)
     token: Mapped[str] = mapped_column(unique=True, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean(), default=True)
     is_admin: Mapped[bool] = mapped_column(Boolean(), default=False)
     notes: Mapped[List['Note']] = relationship(
         'Note', back_populates='user', cascade='all, delete')
@@ -42,7 +43,8 @@ class Note(Base):
     title: Mapped[str] = mapped_column(String(20))
     text: Mapped[str] = mapped_column(Text())
     is_pinned: Mapped[bool] = mapped_column(Boolean(), default=False)
-    link_to_forwd_msg: Mapped[str] = mapped_column(String(100), nullable=True)
+    # link_to_forwd_msg: Mapped[str] = mapped_column(
+    #     String(100), nullable=True)
 
     user_id: Mapped[int] = mapped_column(
         ForeignKey('users.id'), nullable=False)

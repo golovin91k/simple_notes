@@ -23,7 +23,8 @@ async def cmd_start(message: Message) -> None:
     """
     if not await check_user_telegram_id_in_db(message.from_user.id):
         service = UserService()
-        await service.create_new_user(message.from_user.id, False)
+        await service.create_new_user(
+            message.from_user.id, is_admin=False, is_active=True)
     user_id, user_token = await get_user_id_and_token_by_telegram_id(
         message.from_user.id)
     user_token = encryption(user_token)

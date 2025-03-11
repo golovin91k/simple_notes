@@ -28,14 +28,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.mount(
-    '/statics', StaticFiles(
+    '/simple_notes_bot/statics', StaticFiles(
         directory=os.path.join(BASE_DIR, 'src/statics')), name="statics")
 
 
-@app.post("/webhook")
+@app.post('/simple_notes_bot/webhook')
 async def webhook(request: Request) -> None:
-    update = Update.model_validate(await request.json(), context={"bot": bot})
-    await dp.feed_update(bot, update)
+    try:
+        update = Update.model_validate(
+            await request.json(), context={"bot": bot})
+        await dp.feed_update(bot, update)
+    except Exception as e:
+        print(e)
 
 
 app.include_router(user_router_api)

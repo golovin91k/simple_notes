@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="{{ url_for('statics', path='css/style.css') }}">
   </head>
   <body>
+    <div style="background-color: green; text-align: center;">
+        <p class="p-default" style="color: white">{{info_message}} </p>
+      </div>
     <div class="main-container">
 
         <div class="header-div-note-form" style="display: flex; justify-content: center">
@@ -12,12 +15,12 @@
                 <p class="p-note" style="color: white; margin-left: 20px; font-size: 12pt;"> Категория:</p>
             </div>
             <div class="div-flex">
-                <p class="p-note" style="color: white; margin-left: 20px; font-size: 12pt;"> {{category}} </p>
+                <p class="p-note" style="color: white; margin-left: 20px; font-size: 12pt;"> {{category_title}} </p>
             </div>  
         </div>
             <div class="note-div" style="padding-bottom: 10px">
                 <div class="note-header-div">
-                    <p class="p-note" style="color: white; margin-left: 20px; font-size: 12pt;"> {{note.title}} </p>
+                    <p class="p-note" style="color: white; margin-left: 20px; font-size: 12pt;"> {{note.title}} {% if note.is_pinned%}✔{% endif %} </p>
                 </div>
                 {% if note.link_to_forwd_msg %}
                 <div>
@@ -31,16 +34,13 @@
                 <div> 
                     <p class="p-note" style="color: black;  margin: 0px 5px; font-size: 10pt; white-space: pre-line; word-wrap: break-word; word-break: break-all;"> {{note.text}} </p>
                 </div>
-                {% if note.is_pinned %}
-                <div>
-                    <p class="p-note" style="color: black; margin: 10px 5px; font-size: 8pt;"> Заметка закреплена </p>
-                </div>   
-                {% endif %} 
             </div>
             <div class="button-container">
-                <a href={{current_url}} class="button-in-cont" style="left: 5%;">Назад</a>
-                <a href="/notes/{{note.id}}/edit?user_id={{user_id}}" class="button-in-cont" style="right: 30%;">Редактировать</a>
-                <a href="/categories?user_id={{user_id}}&user_token={{user_token}}" class="button-in-cont" style="right: 5%; background-color: red;">Удалить</a>
+                <a href={{back_url}} class="button-in-cont" style="left: 5%;">Назад</a>
+                <a href={{edit_url}} class="button-in-cont" style="right: 30%;">Редактировать</a>
+                <form class="note-form" id="noteForm" action={{delete_url}} method="POST">
+                    <button type="submit" class="button-in-cont" style="right: 5%; background-color: red;">Удалить</button>
+                </form>
             </div>
     </div>
   </body>

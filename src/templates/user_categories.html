@@ -6,12 +6,12 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
   </head>
   <body>
+    <div style="background-color: green; text-align: center;">
+      <p class="p-default" style="color: white">{{info_message}} </p>
+    </div>
     <div class="main-container">
       <div class="header-div">
         <p class="p-category" style="color: white;">Выберите категорию заметок:</p>    
-      </div>
-      <div style="background-color: green; text-align: center;">
-      <p class="p-default" style="color: white">{{info_message}} </p>
       </div>
       {% for category in categories %}
       <a href="{{category.notes_link}}">

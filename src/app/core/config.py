@@ -30,7 +30,7 @@ class Settings(BaseSettings):
 
     @property
     def get_webhook_url(self):
-        return f'{self.SITE_URL}/webhook'
+        return f'{self.SITE_URL}/simple_notes_bot/webhook'
 
 
 settings = Settings()

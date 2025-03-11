@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="main-container">
-        <form class="note-form" id="noteForm" action="/successful_note_creation" method="POST">
+        <form class="note-form" id="noteForm" action="/simple_notes_bot/successful_note_edit" method="POST">
         <div class="header-div-note-form" style="display: flex; justify-content: center">
             <div class="div-flex"> 
                 <label for="category" class="p-note" style="color: white; margin-left: 20px; font-size: 12pt;"> Категория: </label> 
@@ -15,7 +15,7 @@
                 <select id="category" name="category_title" style="margin-left: 20px">
                     <option value="" disabled selected> Выберите категорию </option>
                     {% for cat in user_categories %}
-                    <option name="category_title" value="{{cat}}"> {{cat}} </option>
+                    <option name="category_title" value="{{cat}}" {% if cat == selected_category %}selected{% endif %}> {{cat}} </option>
                     {% endfor %}
                 </select>
             </div> 
@@ -65,7 +65,9 @@
                 </div>
                 {% endif %} 
             </div>
-            <input type="hidden" id="user_telegram_id" name="user_id" value={{note.user_id}} />
+            <input type="hidden" id="user_telegram_id" name="user_id" value={{user_id}} />
+            <input type="hidden" id="user_telegram_id" name="user_token" value={{user_token}} />
+            <input type="hidden" id="user_telegram_id" name="note_id" value={{note.id}} />
             <button type="submit" class="button" style="width: 90%">Отредактировать заметку</button>
         </form>
     </div>
