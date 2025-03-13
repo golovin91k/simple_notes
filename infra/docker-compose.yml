@@ -32,20 +32,6 @@ services:
     networks:
       - simple_notes_bot-network
 
-  nginx:
-    container_name: nginx
-    image: nginx:latest  # Обновите до последней версии
-    restart: always
-    ports:
-      - "8002:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./src/statics:/src/statics
-    depends_on:
-      - simple_notes_bot
-    networks:
-      - simple_notes_bot-network
-
 volumes:
   postgres_data:
 
