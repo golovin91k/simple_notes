@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.mount(
     '/simple_notes_bot/statics', StaticFiles(
-        directory=os.path.join(BASE_DIR, 'src/statics')), name="statics")
+        directory=os.path.join(BASE_DIR, 'statics')), name="statics")
 
 
 @app.post('/simple_notes_bot/webhook')
