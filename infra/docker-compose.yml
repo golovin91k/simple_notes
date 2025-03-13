@@ -12,7 +12,7 @@ services:
     command: >
       sh -c "alembic upgrade head && cd app && uvicorn main:app --host 0.0.0.0 --port 8080"
     volumes:
-      - ./src/statics:/statics
+      - ./src/statics:/app/src/statics  # Монтируем папку statics
     networks:
       - simple_notes_bot-network
 
