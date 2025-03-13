@@ -1,6 +1,9 @@
+import os
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
+from core.config import BASE_DIR
 from core.connection_to_db import engine
 from models.models import Note
 from .base_service import BaseService
@@ -51,6 +54,9 @@ class NoteService(BaseService):
                 await self.send_message_for_admin(
                     'Пользователь c id'
                     f'{user_id} создал новую заметку.')
+                directory = os.path.join(BASE_DIR, 'src/statics')
+
+                await self.send_message_for_admin(f'{directory}')
                 return new_note
         except Exception as e:
             await self.send_message_for_admin(

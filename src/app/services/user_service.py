@@ -1,15 +1,13 @@
 import random
 import secrets
-import os
 
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.config import BASE_DIR
 from core.connection_to_db import engine
 from models.models import User, Category
 from .base_service import BaseService
-from src.app.main import 
+
 
 class UserService(BaseService):
     async def create_new_user(
@@ -29,9 +27,7 @@ class UserService(BaseService):
                     f'Создан новый пользователь '
                     f'с telegram_id {telegram_id}')
                 
-                directory=os.path.join(BASE_DIR, 'src/statics')
 
-                await self.send_message_for_admin(f'{directory}')
             except Exception as e:
                 await self.send_message_for_admin(
                     f'Возникла ошибка при создании нового '
