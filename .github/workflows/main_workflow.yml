@@ -51,7 +51,7 @@ jobs:
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}  # Используйте password или key
           # key: ${{ secrets.SSH_KEY }}     # Если используете SSH-ключ
-          source: "docker-compose.yml"  # Путь к файлу относительно корня репозитория
+          source: "infra/docker-compose.yml"  # Путь к файлу относительно корня репозитория
           target: "/home/simple_notes_bot/"  # Путь на удаленном сервере
 
       - name: Executing remote commands
@@ -61,7 +61,7 @@ jobs:
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            cd /home/simple_notes_bot/
+            cd /home/simple_notes_bot/infra/
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml down
             docker compose -f docker-compose.yml up -d
