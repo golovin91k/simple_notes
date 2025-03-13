@@ -33,7 +33,7 @@ app = FastAPI(lifespan=lifespan)
 BASE_DIR_TEST = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 app.mount(
     '/simple_notes_bot/statics', 
-    StaticFiles(directory=os.path.join(BASE_DIR_TEST, 'src/statics')), 
+    StaticFiles(directory=os.path.join(BASE_DIR_TEST, 'statics')), 
     name="statics")
 
 
