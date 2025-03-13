@@ -61,7 +61,7 @@ jobs:
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            cd /home/simple_notes_bot
+            cd /home/simple_notes_bot/
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml down
             docker compose -f docker-compose.yml up -d
