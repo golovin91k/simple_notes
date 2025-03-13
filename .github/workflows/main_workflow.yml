@@ -51,8 +51,8 @@ jobs:
           username: ${{ secrets.USER }}
           password: ${{ secrets.PASSWORD }}  # Используйте password или key
           # key: ${{ secrets.SSH_KEY }}     # Если используете SSH-ключ
-          source: "infra/docker-compose.yml"  # Путь к файлу относительно корня репозитория
-          target: "/home/simple_notes_bot/docker-compose.yml"  # Путь на удаленном сервере
+          source: "docker-compose.yml"  # Путь к файлу относительно корня репозитория
+          target: "/home/simple_notes_bot/"  # Путь на удаленном сервере
 
       - name: Executing remote commands
         uses: appleboy/ssh-action@master

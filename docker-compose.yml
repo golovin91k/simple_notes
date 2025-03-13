@@ -1,0 +1,40 @@
+services:
+  simple_notes_bot:
+    container_name: simple_notes_bot
+    image: golovin91k/simple_notes_bot:latest
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head && cd app && uvicorn main:app --host 0.0.0.0 --port 8080"
+    volumes:
+      - ./src/statics:/statics
+    networks:
+      - simple_notes_bot-network
+
+  db:
+    container_name: simple_notes_bot_db
+    image: postgres:16-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_NAME} -d ${DB_NAME}"]
+      interval: 10s
+      retries: 5
+      timeout: 10s
+    networks:
+      - simple_notes_bot-network
+
+volumes:
+  postgres_data:
+
+networks:
+  simple_notes_bot-network:
+    driver: bridge
