@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.mount(
-    'https://golovin-projects.ddns.net/simple_notes_bot/statics', StaticFiles(
+    '/simple_notes_bot/statics', StaticFiles(
         directory=os.path.join(BASE_DIR, 'src/statics')), name="statics")
 
 
