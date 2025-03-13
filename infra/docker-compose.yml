@@ -25,7 +25,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_NAME} -d ${DB_NAME}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_DB} -d ${POSTGRES_DB}"]
       interval: 10s
       retries: 5
       timeout: 10s
