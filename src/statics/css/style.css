@@ -97,15 +97,15 @@ border: none;
 }
 
 .button-container {
-  position: relative; /* Устанавливаем позиционирование для контейнера */
-  width: 100%; /* Контейнер будет растягиваться на всю ширину */
-  height: 20px; /* Задаём высоту контейнера */
+  position: relative; 
+  width: 100%; 
+  height: 20px; 
 }
 
 .button-in-cont {
-  position: absolute; /* Абсолютное позиционирование кнопок */
-  top: 50%; /* По центру по вертикали контейнера */
-  transform: translateY(-50%); /* Центрируем по вертикали */
+  position: absolute; 
+  top: 50%; 
+  transform: translateY(-50%); 
   padding: 5px 5px;
   background-color: #4CAF50;
   color: white;
@@ -127,11 +127,11 @@ textarea {
 }
 
 textarea::placeholder {
-  font-family: 'Arial', sans-serif;  /* Задаем шрифт */
-  font-size: 10pt;  /* Размер шрифта */
-  font-weight: bold;  /* Жирность шрифта */
-  color: #888888;  /* Цвет шрифта */
-  line-height: 1.5;  /* Межстрочное расстояние */
+  font-family: 'Arial', sans-serif; 
+  font-size: 10pt; 
+  font-weight: bold;  
+  color: #888888; 
+  line-height: 1.5;  
 }
 
 
@@ -141,4 +141,10 @@ input {
   font-size: 12pt;
   border: 2px solid #e0e0e0;
   border-radius: 5px;
+}
+
+
+.button-in-cont:focus {
+  outline: none !important;
+  border: none !important;
 }

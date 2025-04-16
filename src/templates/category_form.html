@@ -6,24 +6,25 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
   </head>
   <body>
-    <div class="main-container">
-        <form class="note-form" id="noteForm" action="{{url_creation}}" method="POST">
+    <div class="main-container" style="padding-bottom: 4px;">
+      <form class="note-form" id="noteForm" action="/simple_notes_bot/successful_category_creation" style="padding-bottom: 0px;" method="POST">
         <div class="header-div-category-form" style="display: flex; justify-content: center">
-            <div class="div-flex"> 
-                <label for="category" class="p-note" style="color: white; font-size: 12pt;"> Название категории: </label> 
-            </div>
-            <div class="div-flex" style="margin-left: 5px;"> 
-                <textarea name="category_title" minlength="1" maxlength="20" rows="1" style="margin-left: 3px; width: 90%;" required ></textarea>
-            </div>
+          <div class="div-flex"> 
+            <label for="category" class="p-note" style="color: white; font-size: 12pt;"> Название категории: </label> 
+          </div>
+          <div class="div-flex" style="margin-left: 5px;"> 
+            <textarea name="title" minlength="{{MIN_LEN_CATEGORY_TITLE}}" maxlength="{{MAX_LEN_CATEGORY_TITLE}}" rows="1" style="margin-left: 3px; width: 90%;" required ></textarea>
+          </div>
         </div>
-        <div class="button-container" style="margin-top: 10px">
-        <button type="submit" class="button-in-cont" style="left: 5%; width: 100px; font-size: 10pt;">Создать</button>
-        <button class="button-in-cont" style="right: 5%; text-decoration: none; font-size: 10pt; width: 110px;" onclick="closeNow()">Закрыть окно</button>
+        <div class="button-container" style="margin-top: 10px; margin-bottom: 5px">
+          <input type="hidden" id="user_telegram_id" name="user_id" value={{user_id}} />
+          <input type="hidden" id="user_telegram_id" name="user_token" value={{user_token}} />
+          <button type="submit" class="button-in-cont" id="submitButton" style="left: 5%; width: 100px; font-size: 10pt;">Создать</button>
+          <button class="button-in-cont" style="right: 5%; text-decoration: none; font-size: 10pt; width: 110px;" onclick="closeNow()">Закрыть окно</button>
         </div>
-        </form>
-           
-        </div>
+      </form>
     </div>
+    
     <script>
         function closeNow() {
         setTimeout(() => {
@@ -31,5 +32,14 @@
         }, 100);
     }
         </script>
+        <script>
+          document.getElementById('noteForm').addEventListener('submit', function(event) {
+            const button = document.getElementById('submitButton');
+            button.disabled = true;
+            button.innerText = 'Создается...';
+            setTimeout(function() {
+            }, 2000);
+          });
+      </script>
   </body>
 </html>

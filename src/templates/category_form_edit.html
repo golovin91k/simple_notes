@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/simple_notes_bot/statics/css/style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  </head>
+  <body>
+    <div class="main-container" style="padding-bottom: 4px;">
+      <form class="note-form" id="noteForm" action="/simple_notes_bot/successful_category_edit" style="padding-bottom: 0px;" method="POST">
+        <div class="header-div-category-form" style="display: flex; justify-content: center">
+            <div class="div-flex"> 
+                <label for="category" class="p-note" style="color: white; margin-left: 20px; font-size: 12pt;"> Категория: </label> 
+            </div>
+            <div class="div-flex">
+                <select id="category" name="old_title" style="margin-left: 20px">
+                    <option value="" disabled selected> Выберите категорию </option>
+                    {% for cat in user_categories %}
+                    <option name="old_title" value="{{cat}}"> {{cat}} </option>
+                    {% endfor %}
+                </select>
+            </div> 
+        </div>
+        <div class="div-flex">
+            <p class="p-category" style="margin-left: auto; margin-right: auto;">Введите НОВОЕ название категории:</p>
+        </div>
+        <div class="div-flex">
+            <textarea name="title" minlength="{{MIN_LEN_CATEGORY_TITLE}}" maxlength="{{MAX_LEN_CATEGORY_TITLE}}" rows="1" style="margin-left: auto; margin-right: auto; width: 95%; overflow: hidden;" required placeholder="..."></textarea>
+        </div>
+        <div class="button-container" style="margin-top: 10px; margin-bottom: 5px">
+          <button type="submit" class="button-in-cont" id="submitButton" style="left: 5%; width: 150px; font-size: 10pt;">Изменить название</button>
+          <button type="button" class="button-in-cont" style="right: 5%; text-decoration: none; font-size: 10pt; width: 110px;" onclick="closeNow()">Закрыть окно</button>
+        </div>
+        <input type="hidden" id="user_telegram_id" name="user_id" value={{user_id}} />
+        <input type="hidden" id="user_telegram_id" name="user_token" value={{user_token}} />
+      </form>
+    </div>
+    
+    <script>
+        function closeNow() {
+        setTimeout(() => {
+            window.Telegram.WebApp.close();
+        }, 100);
+    }
+        </script>
+        <script>
+          document.getElementById('noteForm').addEventListener('submit', function(event) {
+            const button = document.getElementById('submitButton');
+            button.disabled = true;
+            button.innerText = 'Изменяется...';
+            setTimeout(function() {
+            }, 2000);
+          });
+      </script>
+  </body>
+</html>

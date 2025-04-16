@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Main simple notes bot workflow
 
 on:
   push:

@@ -23,26 +23,26 @@
                 <div class="note-header-div">
                     <p class="p-note" style="color: white; margin-left: 20px; font-size: 12pt;"> {{note.title}} {% if note.is_pinned%}✔{% endif %} </p>
                 </div>
-                {% if note.link_to_forwd_msg %}
-                <div>
-                    <p class="p-note" style="margin-left: 10px">Ссылка:</p>
-                </div>
-                <div>
-                    <a class="p-note" style="margin-left: 10px" href={{tg_url}}>{{tg_url}}</a>
-                    <input type="hidden" id="tg_url" name="tg_url" value={{tg_url}} />
-                </div>
-                {% endif %}
                 <div> 
-                    <p class="p-note" style="color: black;  margin: 0px 5px; font-size: 10pt; white-space: pre-line; word-wrap: break-word; word-break: break-all;"> {{note.text}} </p>
+                    <p class="p-note" style="color: black;  margin: 0px 5px; font-size: 12pt; white-space: pre-line; word-wrap: break-word; word-break: break-all; padding: 10px;"> {{note.text}} </p>
                 </div>
             </div>
             <div class="button-container">
                 <a href={{back_url}} class="button-in-cont" style="left: 5%;">Назад</a>
                 <a href={{edit_url}} class="button-in-cont" style="right: 30%;">Редактировать</a>
-                <form class="note-form" id="noteForm" action={{delete_url}} method="POST">
-                    <button type="submit" class="button-in-cont" style="right: 5%; background-color: red;">Удалить</button>
+                <form class="noteForm" id="noteForm" action={{delete_url}} method="POST">
+                    <button type="submit" class="button-in-cont" id="delete" style="font-size: 10pt; right: 5%; background-color: red;">Удалить</button>
                 </form>
             </div>
     </div>
+    <script>
+        document.getElementById('noteForm').addEventListener('submit', function(event) {
+          const button = document.getElementById('delete');
+          button.disabled = true;
+          button.innerText = 'Удаляется...';
+          setTimeout(function() {
+          }, 2000);
+        });
+    </script>
   </body>
 </html>
