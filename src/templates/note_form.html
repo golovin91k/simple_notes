@@ -14,8 +14,8 @@
             <div class="div-flex">
                 <select id="category" name="category_title" style="margin-left: 20px">
                     <option value="" disabled selected> Выберите категорию </option>
-                    {% for cat in user_categories %}
-                    <option name="category_title" value="{{cat}}"> {{cat}} </option>
+                    {% for category in user_categories %}
+                    <option name="category_title" value="{{category}}"> {{category}} </option>
                     {% endfor %}
                 </select>
             </div> 
@@ -23,44 +23,45 @@
             <div class="note-div" style="padding-bottom: 10px">
                 <div class="note-header-div-note-form">
                     <div> 
-                        <label for="note-title" class="p-note" style="color: white; margin-left: 5px; font-size: 12pt;"> Название заметки: </label>  
+                        <label for="title" class="p-note" style="color: white; margin-left: 5px; font-size: 12pt;"> Название заметки: </label>  
                     </div>
                     <div style="margin-top: 5px"> 
-                        <textarea name="note_title" minlength="1" maxlength="20" rows="1" style="margin-left: 3px; width: 95%;" required placeholder="Введите название заметки..."></textarea>
+                        <textarea name="title" minlength="{{MIN_LEN_NOTE_TITLE}}" maxlength="{{MAX_LEN_NOTE_TITLE}}" rows="1" style="margin-left: 3px; width: 95%; padding-left: 10px;" required placeholder="Введите название заметки..."></textarea>
                     </div>
                 </div>
-                {% if tg_url%}
-                <div>
-                    <p class="p-note" style="margin-left: 10px">Ссылка на пересланное сообщение:</p>
-                </div>
-                <div>
-                    <a class="p-note" style="margin-left: 10px" href={{tg_url}}>{{tg_url}}</a>
-                    <input type="hidden" id="tg_url" name="tg_url" value={{tg_url}} />
-                </div>
-                {% endif %}
                 <div style="margin-top: 10px"> 
                     <div> 
-                        <label for="note-text" class="p-note" style="margin-left: 10px"> Текст заметки: </label>  
+                        <label for="text" class="p-note" style="margin-left: 10px"> Текст заметки: </label>  
                     </div>
                     <div> 
-                        <textarea name="note_text" minlength="1" maxlength="500" rows="20" style="margin-left: 10px; width: 95%;" required placeholder="Введите текст заметки..."></textarea>
+                        <textarea name="text" minlength="{{MIN_LEN_NOTE_TEXT}}" maxlength="{{MAX_LEN_NOTE_TEXT}}" rows="10" style="margin-left: 10px; width: 95%; padding: 10px;" required placeholder="Введите текст заметки..."></textarea>
                     </div>
                 </div>
-                {% if user_pinned_notes < 7 %}
-                <div class="div-flex" style="margin-left: 10px">
+                {% if user_pinned_notes < MAX_NUMBER_OF_PIN_NOTES %}
+                <div class="div-flex" style="margin-left: 10px; gap: 7px">
                     <div class="div-flex">
-                        <input type="checkbox" id="pin-note" name="note_pin" default="False">    
+                        <input type="checkbox" id="is_pinned" name="is_pinned" default="False">    
                     </div>
                     <div class="div-flex">
-                        <label for="pin-note" class="p-note">Закрепить заметку</label>
+                        <label for="is_pinned" class="p-note" style="margin-left: 20 px"> Закрепить заметку</label>
                     </div>
                 </div>   
                 {% endif %} 
             </div>
             <input type="hidden" id="user_telegram_id" name="user_id" value={{user_id}} />
             <input type="hidden" id="user_telegram_id" name="user_token" value={{user_token}} />
-            <button type="submit" class="button" style="width: 90%">Создать заметку</button>
+            <button type="submit" class="button" id="submitButton" style="width: 90%">Создать заметку</button>
         </form>
+
     </div>
+    <script>
+        document.getElementById('noteForm').addEventListener('submit', function(event) {
+          const button = document.getElementById('submitButton');
+          button.disabled = true;
+          button.innerText = 'Создается...';
+          setTimeout(function() {
+          }, 2000);
+        });
+    </script>
   </body>
 </html>

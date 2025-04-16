@@ -23,53 +23,54 @@
             <div class="note-div" style="padding-bottom: 10px">
                 <div class="note-header-div-note-form">
                     <div> 
-                        <label for="note-title" class="p-note" style="color: white; margin-left: 5px; font-size: 12pt;"> Название заметки: </label>  
+                        <label for="title" class="p-note" style="color: white; margin-left: 5px; font-size: 12pt;"> Название заметки: </label>  
                     </div>
                     <div style="margin-top: 5px"> 
-                        <textarea name="note_title" minlength="1" maxlength="20" rows="1" style="margin-left: 3px; width: 95%;" required >{{note.title}}</textarea>
+                        <textarea name="title" minlength="{{MIN_LEN_NOTE_TITLE}}" maxlength="{{MAX_LEN_NOTE_TITLE}}" rows="1" style="margin-left: 3px; width: 95%; padding-left: 10px;" required >{{note.title}}</textarea>
                     </div>
                 </div>
-                {% if note.link_to_forwd_msg%}
-                <div>
-                    <p class="p-note" style="margin-left: 10px">Ссылка на пересланное сообщение:</p>
-                </div>
-                <div>
-                    <textarea name="tg_url" minlength="1" maxlength="30" rows="1" style="margin-left: 3px; width: 95%;">{{note.link_to_forwd_msg}}</textarea>
-                </div>
-                {% endif %}
                 <div style="margin-top: 10px"> 
                     <div> 
-                        <label for="note-text" class="p-note" style="margin-left: 10px"> Текст заметки: </label>  
+                        <label for="text" class="p-note" style="margin-left: 10px"> Текст заметки: </label>  
                     </div>
                     <div> 
-                        <textarea name="note_text" minlength="1" maxlength="500" rows="20" style="margin-left: 10px; width: 95%;" required >{{note.text}}</textarea>
+                        <textarea name="text" minlength="{{MIN_LEN_NOTE_TEXT}}" maxlength="{{MAX_LEN_NOTE_TEXT}}" rows="20" style="margin-left: 10px; width: 95%; padding: 10px" required >{{note.text}}</textarea>
                     </div>
                 </div>
                 {% if note.is_pinned %}
-                <div class="div-flex" style="margin-left: 10px">
+                <div class="div-flex" style="margin-left: 10px; gap: 7px">
                     <div class="div-flex">
-                        <input type="checkbox" id="pin-note" name="note_pin" checked>    
+                        <input type="checkbox" id="is_pinned" name="is_pinned" checked>    
                     </div>
                     <div class="div-flex">
-                        <label for="pin-note" class="p-note">Закрепить заметку</label>
+                        <label for="is_pinned" class="p-note">Закрепить заметку</label>
                     </div>
                 </div>
-                {% elif user_pinned_notes < 7 %}
+                {% elif user_pinned_notes < MAX_NUMBER_OF_PIN_NOTES %}
                 <div class="div-flex" style="margin-left: 10px">
                     <div class="div-flex">
-                        <input type="checkbox" id="pin-note" name="note_pin" default="False">    
+                        <input type="checkbox" id="is_pinned" name="is_pinned" default="False">    
                     </div>
                     <div class="div-flex">
-                        <label for="pin-note" class="p-note">Закрепить заметку</label>
+                        <label for="is_pinned" class="p-note">Закрепить заметку</label>
                     </div>
                 </div>
                 {% endif %} 
             </div>
             <input type="hidden" id="user_telegram_id" name="user_id" value={{user_id}} />
             <input type="hidden" id="user_telegram_id" name="user_token" value={{user_token}} />
-            <input type="hidden" id="user_telegram_id" name="note_id" value={{note.id}} />
-            <button type="submit" class="button" style="width: 90%">Отредактировать заметку</button>
+            <input type="hidden" id="user_telegram_id" name="id" value={{note.id}} />
+            <button type="submit" class="button" id="submitButton" style="width: 90%">Отредактировать заметку</button>
         </form>
     </div>
+    <script>
+        document.getElementById('noteForm').addEventListener('submit', function(event) {
+          const button = document.getElementById('submitButton');
+          button.disabled = true;
+          button.innerText = 'Редактируется...';
+          setTimeout(function() {
+          }, 2000);
+        });
+    </script>
   </body>
 </html>

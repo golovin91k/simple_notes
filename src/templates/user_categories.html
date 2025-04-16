@@ -20,8 +20,10 @@
                <p class="p-category" style="color: white;">{{category.title}}</p> 
           </div>
         <div class="div-flex">
-         <p class="p-default" style="padding-left: 10px"> Название последней заметки:</p>
-         <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{category.latest_note.title}} </p>
+         <p class="p-default" style="margin-left: auto; margin-right: auto;"> Название последней заметки:</p>
+        </div>
+        <div class="div-flex">
+         <p class="p-default" style="margin-left: auto; margin-right: auto; font-weight: bold"> {{category.latest_note.title}} </p>
         </div>
         <div class="div-flex" style="max-width: 450px;">
          <p class="p-default" style="padding-left: 10px"> Текст: </p>
@@ -35,11 +37,14 @@
     </a>
       {% endfor %}
       <div class="button-container">
-        {% if num_of_categories < 5 %}
-        <a href="/simple_notes_bot/categories/new?user_id={{user_id}}&user_token={{user_token}}" class="button-in-cont" style="left: 5%;">Создать категорию</a>
-        {% endif %} 
+        <a href="/simple_notes_bot/categories/edit?user_id={{user_id}}&user_token={{user_token}}" class="button-in-cont" style="left: 5%;">Переименовать категорию</a>
         <button class="button-in-cont" style="right: 5%; text-decoration: none; font-size: 10pt;" onclick="closeNow()">Закрыть окно</button>
       </div>
+      {% if num_of_categories < 5 %}
+      <div class="button-container" style="margin-top: 15px">
+        <a href="/simple_notes_bot/categories/new?user_id={{user_id}}&user_token={{user_token}}" class="button-in-cont" style="left: 5%;">Создать новую категорию</a>
+      </div>
+    {% endif %} 
     </div>
     <script>
       function closeNow() {

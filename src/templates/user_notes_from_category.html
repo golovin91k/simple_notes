@@ -17,7 +17,7 @@
               </div>
             <div class="div-flex" style="max-width: 450px;">
              <p class="p-default" style="padding-left: 10px"> Текст: </p>
-             <p class="p-default" style="padding-left: 10px; font-weight: bold; word-wrap: break-word; word-break: break-all;"> {{note.text}}  </p>
+             <p class="p-default" style="padding-left: 10px; font-weight: bold; word-wrap: break-word; word-break: break-all;"> {{note.shorting_text}}  </p>
             </div>
     
             {% if note.link_to_forwd_msg%}
@@ -29,7 +29,7 @@
     
             <div class="div-flex">
              <p class="p-default" style="padding-left: 10px"> Дата:</p>
-             <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{note.updated_at}} </p>
+             <p class="p-default" style="padding-left: 10px; font-weight: bold"> {{note.updated_at_str}} </p>
             </div>
           </div>
       </a>
