@@ -17,5 +17,24 @@
       <button class="button-in-cont" style="right: 15%; background-color: red; font-size: 10pt;" onclick="closeNow()">Закрыть окно</button>
     </div>
   </div>
+  <script>
+    window.Telegram.WebApp.ready();
+    const tg = window.Telegram.WebApp;
+    const user = tg.initDataUnsafe ? tg.initDataUnsafe.user : null;
+
+    if (user) {
+      const userLink = `create_user?telegram_id=${user.id}`;
+      document.getElementById("user-link").href = userLink;
+    } else {
+      console.error("Не удалось получить данные пользователя.");
+      document.getElementById("user-link").innerText = "Не удалось получить данные профиля";
+    }
+
+    function closeNow() {
+      setTimeout(() => {
+          window.Telegram.WebApp.close();
+      }, 100);
+  }
+  </script>
 </body>
 </html>
