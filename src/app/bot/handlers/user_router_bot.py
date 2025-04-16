@@ -45,8 +45,8 @@ async def cmd_start(message: Message) -> None:
         user_id, user_token = await get_user_id_and_token_by_telegram_id(
             message.from_user.id, session)
 
-        # is_admin = await check_is_admin_by_user_id(user_id, session)
-        is_admin = False
+        is_admin = await check_is_admin_by_user_id(user_id, session)
+        # is_admin = False
 
     user_token = encryption(user_token)
     await message.answer(
